@@ -19,12 +19,20 @@ In this phase, we extract the raw imagery and census data used to train our mode
 2. **Download Data**: We next download the data produced by step (1) and prepare it for training. The script `download_data.py` downloads the raw data from google drive (using `google_drive_utils.py`), discard images that do not meet our urbanization threshold and convert them into a large `HDF5` file which is easier to store locally than many small `tfrecord files`. We also assign each image an identifier in this stage that can be used to match it with its label(s).
 3. **Prepare Training Data**: Next, we process the HDF5 file produced in the previous stage into a form suitable for use in tensorflow. In this phase, we also match each image with its ground truth label (e.g. the outcome to be predicted), partition the data into train, validation, and test sets, and strip off the overlap that GoogleEarth engine adds (e.g. the KernelSize parameter in GEE). This is performed in `prep_data_levels.py` and `prep_data_diffs.py` for levels and diffs models repsectively. Finally, to improve processing speed by TensorFlow, we split the large TFrecord files producted by these scripts into small shards that can be loaded more efficiently. This is performed in `shard_data.py`.
 
+The output of this phase (before sharding) is made available here [GoogleDrive](https://drive.google.com/drive/folders/1MnyQddPAzGWjZrHXlErNDfbJv9dMhr_I?usp=sharing). Users who wish to use our existing data, but experiment with new model architectures may download this data, and uncompress (`tar -xvf ...`) it to the `data` sub-folder of this repository.
+
 ## Phase (2) - Model Training and Validation
+
+This phase defines model architectures, trains models, and performs hyperparameter tuning. Model architecture and training code is contained in `train_level_model.py` and `train_diff_model.py`. We have provided the `run.sh` script which includes detailed descriptions of parameters and command line arguments used by the training scripts.
+
+**General order of operations**: `train_level_model.py -> train_diff_model.py`
+
+Trained models are available here: [GoogleDrive](https://drive.google.com/drive/folders/1n8znM2_A3Q6RLhVRxgU1HBW8FG_g6ndY?usp=sharing). These trained weights may be used for transfer learning (e.g. using our weights to generate features from different imagery).
 
 ## Phase (3) - Predictions
 
 # Instructions
-1. Download data ([GoogleDrive](https://drive.google.com/drive/folders/1MnyQddPAzGWjZrHXlErNDfbJv9dMhr_I?usp=sharing))
+1. Download data 
 2. Move into `data/` directory and un-compress `tar -xvf ...`
 3. Download pretrained model weights ([GoogleDrive](https://drive.google.com/drive/folders/1n8znM2_A3Q6RLhVRxgU1HBW8FG_g6ndY?usp=sharing))
 4. Move into `weights/` directory and un-compress `tar -xvf ..`
