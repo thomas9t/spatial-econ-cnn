@@ -29,9 +29,6 @@ This phase defines model architectures, trains models, and performs hyperparamet
 
 Trained models are available here: [GoogleDrive](https://drive.google.com/drive/folders/1n8znM2_A3Q6RLhVRxgU1HBW8FG_g6ndY?usp=sharing). These trained weights may be used for transfer learning (e.g. using our weights to generate features from different imagery).
 
-## Phase (3) - Predictions
-
-Prediction files at the level of our large images can be accessed [here](insert link). Here we also share a version which has been geographically crosswalked to 2010 Census Blocks. The unique identifier for images is img_id, and for census blocks is gisjoin (as defined by NHGIS [here](https://www.nhgis.org/geographic-crosswalks)).
 
 # Instructions
 1. Download data 
@@ -39,3 +36,8 @@ Prediction files at the level of our large images can be accessed [here](insert 
 3. Download pretrained model weights ([GoogleDrive](https://drive.google.com/drive/folders/1n8znM2_A3Q6RLhVRxgU1HBW8FG_g6ndY?usp=sharing))
 4. Move into `weights/` directory and un-compress `tar -xvf ..`
 5. Run the script `run.sh`. The script will create a virtual-environment, install dependencies and run scripts for training. There are several different run configurations listed in `run.sh` which can reproduce various aspects of the paper (e.g. `RGB only` models or models with nighlights). Inspect `run.sh` for more detail.
+
+
+## Phase (3) - Predictions
+
+Predictions and geographic shapefiles at the level of our large images can be accessed [here](https://drive.google.com/drive/folders/1JZ_AnYVqfM1AxX5Gzfin0Lw0s_20ilB9?usp=sharing). Also shared is a version which has been geographically crosswalked to 2010 Census Blocks. The unique identifier for images is img_id, and for Census Blocks is gisjoin (as defined by NHGIS [here](https://www.nhgis.org/geographic-crosswalks)). Within each file are predictions of income and population which are generated in our out of sample model (as described in section 3.4). The variable inc_0_feature for example refers to the predicted log income in 2000, using the model including initial conditions. The variable dpop_9_19, conversely is our prediction of the log change in population from 2009 to 2019, in the model excluding initial conditions. Note that difference predictions are not crosswalked to the Block version of these data.
