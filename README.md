@@ -27,8 +27,9 @@ This phase defines model architectures, trains models, and performs hyperparamet
 
 **General order of operations**: `train_level_model.py -> train_diff_model.py`
 
-Trained models are available here: [GoogleDrive](https://drive.google.com/drive/folders/1n8znM2_A3Q6RLhVRxgU1HBW8FG_g6ndY?usp=sharing). These trained weights may be used for transfer learning (e.g. using our weights to generate features from different imagery).
+Trained models are available here: [GoogleDrive](https://drive.google.com/drive/folders/1n8znM2_A3Q6RLhVRxgU1HBW8FG_g6ndY?usp=sharing). These trained weights may be used for transfer learning (e.g. using our weights to generate features from different imagery). Models are named according to the following conventions:
 
+`block_[small,large]_national_[level,diff]_base[_feature]_[inc,pop][_all]`, where `small/large` indicates the imagery size (e.g. the `40x40` vs `80x80` imagery), `level/diff` indicates models for levels vs. diffs, the presence `_feature` indicates models trained with initial conditions (e.g. auxiliary features), `inc/pop` indicates the outcome variable, and the presence of `_all` indicates models trained on the entire set of images in 2000/2010 (e.g. used to produce the out-of-period results in Table 2).
 
 # Instructions
 1. Download data 
