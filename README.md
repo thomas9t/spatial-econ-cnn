@@ -1,5 +1,5 @@
 # Using Neural Networks to Predict Micro-Spatial Economic Growth
-Repository of code associated with the paper "Using Neural Networks to Predict Micro-Spatial Economic Growth"
+Repository of code associated with the paper "Using Neural Networks to Predict Micro-Spatial Economic Growth", which is forthcoming at the journal AER: Insights.
 
 This code was run on a Linux computer using `Python 3.6–3.8, pip and venv >= 19.0, tensorflow >= 2.0, numpy >= 1.2`
 
