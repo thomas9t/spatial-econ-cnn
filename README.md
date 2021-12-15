@@ -13,7 +13,7 @@ Phases (1) and (2) will be of interest for those interested in extending our bas
 
 ## Phase (1) - Data Extraction and Processing
 
-In this phase, we extract the raw imagery and census data used to train our models. This phase is divided into the following steps:
+In this phase, we extract the raw imagery and census data used to train our models. Cleaned and processed data ready for training (e.g. the output of this phase) is avilable on [GoogleDrive](https://drive.google.com/drive/folders/1MnyQddPAzGWjZrHXlErNDfbJv9dMhr_I?usp=sharing). This phase is divided into the following steps:
 
 **General order of operations**: `extract_gee_data.py -> download_data.py -> prep_data_levels.py -> prep_data_diffs.py -> shard_data.py`
 
@@ -35,12 +35,11 @@ Trained models are available here: [GoogleDrive](https://drive.google.com/drive/
 
 `block_[small,large]_national_[level,diff]_base[_feature]_[inc,pop][_all]`, where `small/large` indicates the imagery size (e.g. the `40x40` vs `80x80` imagery), `level/diff` indicates models for levels vs. diffs, the presence `_feature` indicates models trained with initial conditions (e.g. auxiliary features), `inc/pop` indicates the outcome variable, and the presence of `_all` indicates models trained on the entire set of images in 2000/2010 (e.g. used to produce the out-of-period results in Table 2).
 
-# Instructions
-1. Download data 
+### Instructions
+1. Download data [GoogleDrive](https://drive.google.com/drive/folders/1MnyQddPAzGWjZrHXlErNDfbJv9dMhr_I?usp=sharing) 
 2. Move into `data/` directory and un-compress `tar -xvf ...`
-3. Download pretrained model weights ([GoogleDrive](https://drive.google.com/drive/folders/1n8znM2_A3Q6RLhVRxgU1HBW8FG_g6ndY?usp=sharing))
-4. Move into `weights/` directory and un-compress `tar -xvf ..`
-5. Run the script `run.sh`. The script will create a virtual-environment, install dependencies and run scripts for training. There are several different run configurations listed in `run.sh` which can reproduce various aspects of the paper (e.g. `RGB only` models or models with nighlights). Inspect `run.sh` for more detail.
+3. Move into `weights/` directory and un-compress `tar -xvf ..`
+4. Run the script `run.sh`. The script will create a virtual-environment, install dependencies and run scripts for training. There are several different run configurations listed in `run.sh` which can reproduce the various aspects of the paper (e.g. `RGB only` models or models with nighlights). Inspect `run.sh` for more detail.
 
 ## Phase (3) - Predictions
 
