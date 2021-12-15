@@ -9,7 +9,8 @@ import tensorflow as tf
 np.random.seed(13298)
 tf.config.threading.set_inter_op_parallelism_threads(1)
 
-sys.path.append("../../../lib/python")
+tf.compat.v1.disable_eager_execution()
+
 from google_drive_utils import GDFolderDownloader
 from params import *
 
@@ -22,7 +23,7 @@ LOG.addHandler(ch)
 LOG.setLevel(logging.INFO)
 
 YEARS = list(range(0,20))
-path = "/home/harry/hhd1/scnn_final_datasets/small_images_all_years_raw.h5"  # Where should the output HDF5 file be written?
+path = "../data/small_images_all_years_raw.h5"  # Where should the output HDF5 file be written?
 
 root_dir_id = "1d1Fw4nuM_9a8xAguehLFW7UmsZVk8dt-"  # The folder in Google Drive that contains the raw data (this will need to be changed if you created a new extract)
 IMG_ROWS_RAW = 54  # The number of rows in the raw images (54 for small, 94 for large)
@@ -67,19 +68,25 @@ def main():
     if "/data" not in h5_file:
         h5_file.create_table("/", "data", IMGData)
     table = h5_file.get_node("/data")
+    
+    # Used to keep track of what data has already been downloaded
+    # in case the pod crashes and we need to restart
+    processed_paths_file = "../output/processed_paths_small.txt"
+    if not os.path.exists(processed_paths_file):
+        with open(processed_paths_file, "w") as fh:
+            pass
 
     # Note: we should not expect these images to "look" reasonable if displayed
     # They are coded using a different scheme.
     GD = GDFolderDownloader(
         root_dir_id, 
         "../temp_small", os.getcwd() + "/client_secrets.json",
-        "../output/processed_paths_small.txt")
+        processed_paths_file)
     GD.file_list = filter(lambda x: ".tfrecord" in x["title"], GD.file_list)
 
     key = lambda x: int(x["title"].split("-")[-1].replace(".tfrecord",""))
     GD.file_list = sorted(GD.file_list, key=key)
     
-    sess = tf.Session()
     ix = 0
     invalid_data = 0
 
@@ -99,7 +106,7 @@ def main():
             continue
         
         it = tfr_data_pipeline(fpath, IMG_ROWS_RAW, IMG_COLS_RAW)
-        with tf.Session() as sess:
+        with tf.compat.v1.Session() as sess:
             while True:
                 try:
                     imgs, lat, lng, urban = sess.run(it)
@@ -131,7 +138,7 @@ def main():
                     break
             
         LOG.info("Wrote: {} images".format(total_imgs))
-        with open("../output/processed_paths_small.txt", "a") as fh:
+        with open(processed_paths_file, "a") as fh:
             fh.write(fpath + "\n")
         os.unlink(fpath)
 
@@ -145,11 +152,11 @@ def tfr_data_pipeline(path, img_rows, img_cols):
     other_vars = ["urban", "longitude", "latitude"]
 
     varnames = channel_names + other_vars
-    features = [tf.FixedLenFeature([img_rows*img_cols], tf.float32)] * len(varnames)
+    features = [tf.compat.v1.FixedLenFeature([img_rows*img_cols], tf.float32)] * len(varnames)
     features_dict = dict(zip(varnames, features))
 
     def parse_example(example_proto):
-        parsed_features = tf.parse_single_example(example_proto, features_dict)
+        parsed_features = tf.compat.v1.parse_single_example(example_proto, features_dict)
         
         # reshape the vector data into an image suitable for use in a net
         f = lambda x: tf.reshape(x, (img_rows, img_cols))
@@ -170,7 +177,7 @@ def tfr_data_pipeline(path, img_rows, img_cols):
 
     ds = tf.data.TFRecordDataset(path)
     parsed_ds = ds.map(parse_example)
-    it = parsed_ds.make_one_shot_iterator()
+    it = tf.compat.v1.data.make_one_shot_iterator(parsed_ds)
     return it.get_next()
 
 
