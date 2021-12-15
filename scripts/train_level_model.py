@@ -5,9 +5,9 @@ from models import *
 from data_loader import *
 
 tf.random.set_seed(1234567)
+physical_devices = tf.config.experimental.list_physical_devices('GPU')
 if len(physical_devices) > 0:
-    physical_devices = tf.config.experimental.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 tf.config.threading.set_inter_op_parallelism_threads(1)
 
 construct = sys.argv[1]  # BG or block
