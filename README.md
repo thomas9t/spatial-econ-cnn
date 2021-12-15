@@ -3,6 +3,8 @@ Repository of code associated with the paper "Using Neural Networks to Predict M
 
 This code was run on a Linux computer using `Python 3.6–3.8, pip and venv >= 19.0, tensorflow >= 2.0, numpy >= 1.2`
 
+Other packages needed (see `run.sh`): `pytables, pydrive`
+
 # Overview
 
 Our code pipeline is generally divided into three phases: (1) raw data extraction and processing, (2) model training and validation, and (3) predictions and analysis. The output of phase (1) is a set of `.tfrecord` files containing the train, validation, and test data. The output of phase (2) are trained CNNs. The output of phase (3) are predictions of our outcome variables.
@@ -16,8 +18,10 @@ In this phase, we extract the raw imagery and census data used to train our mode
 **General order of operations**: `extract_gee_data.py -> download_data.py -> prep_data_levels.py -> prep_data_diffs.py -> shard_data.py`
 
 1. **Create raw data export from GoogleEarthEngine**: This is performed by the file `scripts/extract_gee_data.py`. The file will define the extract and the resulting data will be written (as many small TFRecord files) to a folder in Google Drive.
-2. **Download Data**: We next download the data produced by step (1) and prepare it for training. The script `download_data.py` downloads the raw data from google drive (using `google_drive_utils.py`), discard images that do not meet our urbanization threshold and convert them into a large `HDF5` file which is easier to store locally than many small `tfrecord files`. We also assign each image an identifier in this stage that can be used to match it with its label(s).
+2. **Download Data**: We next download the data produced by step (1) and prepare it for training. The script `download_data.py` downloads the raw data from google drive (using `google_drive_utils.py`), discard images that do not meet our urbanization threshold and convert them into a large `HDF5` file which is easier to store locally than many small `tfrecord files`. We also assign each image an identifier in this stage that can be used to match it with its label(s). See the "important note" below regarding this step.
 3. **Prepare Training Data**: Next, we process the HDF5 file produced in the previous stage into a form suitable for use in tensorflow. In this phase, we also match each image with its ground truth label (e.g. the outcome to be predicted), partition the data into train, validation, and test sets, and strip off the overlap that GoogleEarth engine adds (e.g. the KernelSize parameter in GEE). This is performed in `prep_data_levels.py` and `prep_data_diffs.py` for levels and diffs models repsectively. Finally, to improve processing speed by TensorFlow, we split the large TFrecord files producted by these scripts into small shards that can be loaded more efficiently. This is performed in `shard_data.py`.
+
+**Important Note**: This phase requires interacting with GoogleDrive's Python API which is a somewhat convoluted process. The script `google_drive_utils.py` helps automate this somewhat. To run the code, you will need to follow the instructions of PyDrive ([here](https://pythonhosted.org/PyDrive/quickstart.html#authentication)) to set up a Google project and create a `client_secrets.json` file. This file should be placed in the `scripts` directory. The first time you run code, you will be asked to authenticate via a command line prompt. Copy and paste the URL from the command line into a browser and follow the instructions to authorize the PyDrive API. Unforauntely, we have not found a good way to make this process less cumbersome.
 
 The output of this phase is made available here [GoogleDrive](https://drive.google.com/drive/folders/1MnyQddPAzGWjZrHXlErNDfbJv9dMhr_I?usp=sharing). Users who wish to use our existing data, but experiment with new model architectures may download this data, and uncompress (`tar -xvf ...`) it to the `data` sub-folder of this repository.
 
