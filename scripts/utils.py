@@ -62,6 +62,12 @@ def get_feature_description(feature_type):
             'pop_share': tf.io.FixedLenFeature((), tf.float32),
             'baseline_features': tf.io.FixedLenFeature((), tf.string)
         }
+    elif feature_type == "prediction":
+        feature_description = {
+            'image{}'.format(i): tf.io.FixedLenFeature((), tf.string) for i in range(20)
+        }
+        feature_description['img_id'] = tf.io.FixedLenFeature((), tf.int64)
+        feature_description['baseline_features'] = tf.io.FixedLenFeature((), tf.string)
     else:
         sys.exit('pls use a correct model_type')
     return feature_description
