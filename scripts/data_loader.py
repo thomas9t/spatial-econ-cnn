@@ -22,6 +22,10 @@ def decode(serialized_example, feature_description, img_size, n_origin_bands, n_
     image = tf.reshape(image, (img_size, img_size, n_origin_bands))
     image = image[:, :, 0:n_bands]
     image = tf.clip_by_value(image, 0, 1)
+    if datatype == "inc_pop":
+        label = tf.reshape(example["inc" + year] - example["pop" + year], [-1])
+    else:
+        label = tf.reshape(example[datatype + year], [-1])
     label = tf.reshape(example[datatype + year], [-1])
     features = tf.io.parse_tensor(example['baseline_features'], out_type=float)
     features = tf.reshape(features, (34,))
@@ -39,8 +43,12 @@ def decode_diff(serialized_example, feature_description, img_size, n_origin_band
     image1 = image1[:, :, 0:n_bands]
     image0 = tf.clip_by_value(image0, 0, 1)
     image1 = tf.clip_by_value(image1, 0, 1)
-    label0 = tf.reshape(example['{}0'.format(datatype)], [-1])
-    label1 = tf.reshape(example['{}1'.format(datatype)], [-1])
+    if datatype=="inc_pop":
+        label0 = tf.reshape(example['inc0'] - example['pop0'], [-1])
+        label1 = tf.reshape(example['inc1'] - example['pop1'], [-1])
+    else:
+        label0 = tf.reshape(example['{}0'.format(datatype)], [-1])
+        label1 = tf.reshape(example['{}1'.format(datatype)], [-1])
     label = label1 - label0
     features = tf.io.parse_tensor(example['baseline_features'], out_type=float)
     features = tf.reshape(features, (34,))
