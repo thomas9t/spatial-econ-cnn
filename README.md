@@ -3,7 +3,7 @@ Repository of code associated with the paper "Using Neural Networks to Predict M
 
 This code was run on a Linux computer using `Python 3.6–3.8, pip and venv >= 19.0, tensorflow >= 2.0, numpy >= 1.2`
 
-Other packages needed (see `run.sh`): `pytables, pydrive`
+Other packages needed (see `run.sh`): `pytables, pydrive, pandas, tqdm`
 
 # Overview
 
