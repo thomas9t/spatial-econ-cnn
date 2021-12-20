@@ -27,13 +27,14 @@ ds = int(sys.argv[14])
 nf = int(sys.argv[15])
 dr = float(sys.argv[16])
 epochs = int(sys.argv[17])
+all_sample = get_bool(sys.argv[18]) # [True, False]
 test_type = 'prediction'
 
 if (region != 'national') | (model_type != 'base'):
         sys.exit('Currently prediction only works for national base model')
 
-weight_dir = '{}/{}_{}_national_level_base{}_{}_{}/checkpoints/{}_{}_{}_{}_{}_{}' \
-        .format(weight_dir, construct, size,'_feature' if with_feature else '', datatype, epochs, lr, l2, bs, ds, nf, dr)
+weight_dir = '{}/{}_{}_{}_level_{}{}_{}_{}{}/checkpoints/{}_{}_{}_{}_{}_{}' \
+        .format(weight_dir, construct, size, region, model_type, '_feature' if with_feature else '', datatype, epochs, '_all' if all_sample else '', lr, l2, bs, ds, nf, dr)
 ds_dir = '{}/{}_{}_{}_{}_sharded/{}_{}_{}_{}_{}_*-of-*.tfrecords' \
         .format(data_dir, size, construct, test_type, region, '*', construct, size, test_type, region)
 
@@ -46,7 +47,7 @@ def main():
     model.load_weights(weight_dir).expect_partial()
     ds = read_files(ds_dir, lambda x: parse(x, get_feature_description(test_type)))
     df = predict(ds, model, df)
-    df.to_csv('{}/{}_{}_{}_level_{}{}_{}_all_years_predictions.csv'.format(out_dir, construct, size, region, model_type, '_feature' if with_feature else '', datatype), index=False)
+    df.to_csv('{}/{}_{}_{}_level_{}{}_{}{}_predictions.csv'.format(out_dir, construct, size, region, model_type, '_feature' if with_feature else '', datatype, '_all' if all_sample else ''), index=False)
     print('complete!')
 
 
