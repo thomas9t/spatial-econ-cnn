@@ -23,12 +23,23 @@ LOG.addHandler(ch)
 LOG.setLevel(logging.INFO)
 
 YEARS = list(range(0,20))
-path = "../data/small_images_all_years_raw.h5"  # Where should the output HDF5 file be written?
+mode = sys.argv[1]
+if mode not in ["large", "small"]:
+    raise Exception("Mode must be 'large' or 'small'")
+path = f"../data/{mode}_images_all_years_raw.h5"  # Where should the output HDF5 file be written?
 
-root_dir_id = "1d1Fw4nuM_9a8xAguehLFW7UmsZVk8dt-"  # The folder in Google Drive that contains the raw data (this will need to be changed if you created a new extract)
-IMG_ROWS_RAW = 54  # The number of rows in the raw images (54 for small, 94 for large)
-IMG_COLS_RAW = 54  # The number of columns in the raw images (54 for small, 94 for large)
-CHANNEL_NAMES = CHANNEL_NAMES_SMALL
+if mode == "small":
+    root_dir_id = "1d1Fw4nuM_9a8xAguehLFW7UmsZVk8dt-"  # The folder in Google Drive that contains the raw data (this will need to be changed if you created a new extract)
+    IMG_ROWS_RAW = 54  # The number of rows in the raw images (54 for small, 94 for large)
+    IMG_COLS_RAW = 54  # The number of columns in the raw images (54 for small, 94 for large)
+    CHANNEL_NAMES = CHANNEL_NAMES_SMALL
+else:
+    root_dir_id = "https://drive.google.com/drive/folders/1TyZ9FEFr0ySaPxXHLyIUet6jEB3NEwbe"  # The folder in Google Drive that contains the raw data (this will need to be changed if you created a new extract)
+    IMG_ROWS_RAW = 94  # The number of rows in the raw images (54 for small, 94 for large)
+    IMG_COLS_RAW = 94  # The number of columns in the raw images (54 for small, 94 for large)
+    CHANNEL_NAMES = CHANNEL_NAMES_LARGE
+
+    
 IMG_SHAPE = (IMG_ROWS_RAW, IMG_COLS_RAW, len(CHANNEL_NAMES))
 class IMGData(tables.IsDescription):
     img0 = tables.Float32Col(shape=IMG_SHAPE)
@@ -56,22 +67,22 @@ class IMGData(tables.IsDescription):
     img_id = tables.Int64Col()
     urban_share = tables.Float32Col()
 
+
 def main():
-    # This may need to be updated periodically
-    
-    if not os.path.exists("../temp_small"):
-        os.mkdir("../temp_small")
+    tempdir = f"../temp_{mode}"
+    if not os.path.exists(tempdir):
+        os.mkdir(tempdir)
     if not os.path.exists("../output"):
         os.mkdir("../output")
-    mode = "w" if not os.path.exists(path) else "a"
-    h5_file = tables.open_file(path, mode=mode)
+    h5_open_mode = "w" if not os.path.exists(path) else "a"
+    h5_file = tables.open_file(path, mode=h5_open_mode)
     if "/data" not in h5_file:
         h5_file.create_table("/", "data", IMGData)
     table = h5_file.get_node("/data")
     
     # Used to keep track of what data has already been downloaded
     # in case the pod crashes and we need to restart
-    processed_paths_file = "../output/processed_paths_small.txt"
+    processed_paths_file = f"../output/processed_paths_{mode}.txt"
     if not os.path.exists(processed_paths_file):
         with open(processed_paths_file, "w") as fh:
             pass
@@ -80,7 +91,7 @@ def main():
     # They are coded using a different scheme.
     GD = GDFolderDownloader(
         root_dir_id, 
-        "../temp_small", os.getcwd() + "/client_secrets.json",
+        tempdir, os.getcwd() + "/client_secrets.json",
         processed_paths_file)
     GD.file_list = filter(lambda x: ".tfrecord" in x["title"], GD.file_list)
 
@@ -90,9 +101,8 @@ def main():
     ix = 0
     invalid_data = 0
 
-    outfh_path = "../output/valid_imgs_small.txt"
-    mode = "w" if not os.path.exists(outfh_path) else "a"
-    out_fh = open(outfh_path, mode)
+    outfh_path = f"../output/valid_imgs_{mode}.txt"
+    out_fh = open(outfh_path, "w" if not os.path.exists(outfh_path) else "a")
     if mode == "w":
         out_fh.write("filename,img_num_in_file,img_id,lat,lng,urban\n")
  
@@ -109,7 +119,7 @@ def main():
         with tf.compat.v1.Session() as sess:
             while True:
                 try:
-                    imgs, lat, lng, urban = sess.run(it)
+                    imgs, lat, lng, urban, nl = sess.run(it)
                     img_num += 1
                     
                     urban[np.isnan(urban)] = 0
@@ -128,6 +138,7 @@ def main():
                     table.row["lat"] = lat
                     table.row["lng"] = lng
                     table.row["img_id"] = ix
+                    
                     table.row.append()
                     total_imgs += 1
 
