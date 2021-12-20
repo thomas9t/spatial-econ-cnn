@@ -2,8 +2,13 @@ import numpy as np
 from utils import *
 
 
-def read_files(files_dir, ds_map, mode="test"):
-    files = tf.io.matching_files(files_dir)
+def read_files(files_dir, ds_map, mode="test", all_samples=False):
+    if (all_samples) & (mode=='train'):
+       files_train = tf.io.matching_files(files_dir.format("train"))
+       files_valid = tf.io.matching_files(files_dir.format("validation"))
+       files = tf.concat([files_train,files_valid],0)
+    else:
+       files = tf.io.matching_files(files_dir)
     shards = tf.data.Dataset.from_tensor_slices(files)
     if mode == 'train':
         shards = shards.shuffle(buffer_size=len(files), reshuffle_each_iteration=True)
@@ -99,12 +104,12 @@ def data_process_diff(image0, image1, features, label, with_feature):
         return (image0, image1), label
 
 
-def get_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, subset):
+def get_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, subset, all_samples=False):
     img_size, img_augmented_size, n_origin_bands, n_bands, res = get_img_size(size, model_type, region, resolution)
     test_type, feature_type, year = get_type(year, region)
     feature_description = get_feature_description(feature_type)
     decode_map = lambda x: decode(x, feature_description, img_size, n_origin_bands, n_bands, datatype, res, year)
-    ds = read_files(ds_dir.format(test_type, subset, test_type), decode_map, subset)
+    ds = read_files(ds_dir.format(test_type, subset, test_type), decode_map, subset, all_samples)
     if subset == "train":
         process_map = lambda x, y, z: data_process_train(x, y, z, img_size, img_augmented_size, n_bands, with_feature)
         ds = ds.shuffle(10000)
@@ -114,12 +119,12 @@ def get_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, regi
     return ds
 
 
-def get_diff_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, subset):
+def get_diff_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, subset, all_samples=False):
     img_size, img_augmented_size, n_origin_bands, n_bands, res = get_img_size(size, model_type, region, resolution)
     test_type, feature_type, year = get_type(year, region)
     feature_description = get_feature_description(feature_type)
     decode_map = lambda x: decode_diff(x, feature_description, img_size, n_origin_bands, n_bands, datatype, res)
-    ds = read_files(ds_dir.format(test_type, subset, test_type), decode_map, subset)
+    ds = read_files(ds_dir.format(test_type, subset, test_type), decode_map, subset, all_samples)
     if subset == "train":
         process_map = lambda a, b, c, d: data_process_diff_train(a, b, c, d, img_size, img_augmented_size, n_bands, with_feature)
         ds = ds.shuffle(10000, reshuffle_each_iteration=True)

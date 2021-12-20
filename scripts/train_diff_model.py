@@ -30,6 +30,7 @@ level_ds = int(sys.argv[15])
 level_nf = int(sys.argv[16])
 level_dr = float(sys.argv[17])
 level_epochs = int(sys.argv[18])
+all_sample = get_bool(sys.argv[19])
 
 HP_LR = hp.HParam('lr', hp.Discrete([1e-4, 1e-5]))
 HP_L2 = hp.HParam('l2', hp.Discrete([1e-6, 1e-7, 1e-8]))
@@ -40,21 +41,21 @@ HP_DR = hp.HParam('dr', hp.Discrete([0.5]))
 
 ds_dir = '{}/{}_{}_{}_{}/{}_{}_{}_{}_{}_*-of-*.tfrecords' \
     .format(data_dir, size, construct, '{}', region, '{}', construct, size, '{}', region)
-weight_dir = '{}/{}_{}_{}_level_{}{}{}_{}_{}/checkpoints/{}_{}_{}_{}_{}_{}' \
+weight_dir = '{}/{}_{}_{}_level_{}{}{}_{}_{}{}/checkpoints/{}_{}_{}_{}_{}_{}' \
     .format(weight_dir, construct, size, region, model_type, '_feature' if with_feature else '',
-            '_high' if resolution == 'high' else '', datatype, level_epochs, level_lr, level_l2,
+            '_high' if resolution == 'high' else '', datatype, level_epochs,'_all' if all_sample else '', level_lr, level_l2,
             level_bs, level_ds, level_nf, level_dr)
 out_dir = '{}/{}_{}_{}_diff_{}{}{}_{}_{}' \
     .format(out_dir, construct, size, region, model_type, '_feature' if with_feature else '',
-            '_high' if resolution == 'high' else '', datatype, epochs)
+            '_high' if resolution == 'high' else '', datatype, epochs, '_all' if all_sample else '')
 logdir = '{}/logs'.format(out_dir)
 checkdir = '{}/checkpoints'.format(out_dir)
 
 
 def main():
-    print("Start finetuning of {}_{}_diff_{}{}{}_{} model with epochs={}"
+    print("Start finetuning of {}_{}_diff_{}{}{}_{}_{} model with epochs={}"
           .format(size, region, model_type, '_feature' if with_feature else '',
-                  '_high' if resolution == 'high' else '', datatype, epochs)
+                  '_high' if resolution == 'high' else '', datatype, epochs, '_all' if all_sample else '')
           )
     print("You can use tensorboard to monitor the process $ tensorboard --logdir='{}'".format(logdir))
 
@@ -70,9 +71,8 @@ def main():
     year = 'diff'
     bs = 16
     img_size, _, _, n_bands, _ = get_img_size(size, model_type, region, resolution)
-    train = get_diff_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, 'train')
-    valid = get_diff_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution,
-                             'validation')
+    train = get_diff_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, 'train', all_sample)
+    valid = get_diff_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, 'test' if all_sample else 'validation', all_sample)
     test = get_diff_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, 'test')
     model = make_level_model(img_size, n_bands, level_l2, level_nf, level_dr, with_feature)
     model.load_weights(weight_dir).expect_partial()

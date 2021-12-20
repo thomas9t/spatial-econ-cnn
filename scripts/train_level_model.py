@@ -20,6 +20,7 @@ with_feature = get_bool(sys.argv[7])  # [True, False]
 epochs = int(sys.argv[8])
 data_dir = sys.argv[9]  # /source/data or ../temp
 out_dir = sys.argv[10]  # /storage/national_level_result large or small
+all_sample = get_bool(sys.argv[11]) # [True, False]
 
 HP_LR = hp.HParam('lr', hp.Discrete([1e-4]))
 HP_L2 = hp.HParam('l2', hp.Discrete([1e-6, 1e-7, 1e-8]))
@@ -30,17 +31,17 @@ HP_DR = hp.HParam('dr', hp.Discrete([0.5]))
 
 ds_dir = '{}/{}_{}_{}_{}/{}_{}_{}_{}_{}_*-of-*.tfrecords' \
     .format(data_dir, size, construct, '{}', region, '{}', construct, size, '{}', region)
-out_dir = '{}/{}_{}_{}_level_{}{}{}_{}_{}' \
+out_dir = '{}/{}_{}_{}_level_{}{}{}_{}_{}{}' \
     .format(out_dir, construct, size, region, model_type, '_feature' if with_feature else '',
-            '_high' if resolution == 'high' else '', datatype, epochs)
+            '_high' if resolution == 'high' else '', datatype, epochs, '_all' if all_sample else '')
 logdir = '{}/logs'.format(out_dir)
 checkdir = '{}/checkpoints'.format(out_dir)
 
 
 def main():
-    print("Start finetuning of {}_{}_level_{}{}{}_{} model with epochs={}"
+    print("Start finetuning of {}_{}_level_{}{}{}_{}{} model with epochs={}"
           .format(size, region, model_type, '_feature' if with_feature else '',
-                  '_high' if resolution == 'high' else '', datatype, epochs)
+                  '_high' if resolution == 'high' else '', datatype, epochs, '_all' if all_sample else '')
           )
     print("You can use tensorboard to monitor the process $ tensorboard --logdir='{}'".format(logdir))
 
@@ -57,9 +58,9 @@ def main():
     bs = 16
     img_size, _, _, n_bands, _ = get_img_size(size, model_type, region, resolution)
 
-    train = get_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, 'train')
-    valid = get_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, 'validation')
-    test = get_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, 'test')
+    train = get_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, 'train', all_sample)
+    valid = get_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, 'test' if all_sample else 'validation', all_sample)
+    test = get_dataset(ds_dir, size, datatype, model_type, with_feature, bs, year, region, resolution, 'test', all_sample)
 
     with tf.summary.create_file_writer(logdir + '/hparam_tuning/').as_default():
         hp.hparams_config(
