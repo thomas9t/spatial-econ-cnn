@@ -8,7 +8,7 @@
 python3 -m venv --system-site-packages ./scnn
 source ./scnn/bin/activate
 pip install --upgrade pip
-pip install --upgrade tensorflow numpy pytables pydrive
+pip install --upgrade tensorflow numpy pytables pydrive pandas tqdm
 
 
 # train level model
@@ -20,41 +20,45 @@ pip install --upgrade tensorflow numpy pytables pydrive
 # region: Region of analysis. May be: 'national' or 'mw' (for midwest)
 # model_type: What channels should be used. May be: 'base', 'RGB' (for RGB only), 'nl' (for base + nighlights)
 # size: What size of images should be used. May be:'large' (for 2.4 km^2) 'small' (for 1.2 km^2)
-# datatype: What outcome variable should be predicted. May be: 'inc' or 'pop'
+# datatype: What outcome variable should be predicted. May be: 'inc' or 'pop' or 'inc_pop'
 # resolution: What data resolution should be used. May be: 'high' or 'low'
 # with_feature: Should initial conditions be included. May be: True, False
 # epochs: How many epochs should be used for training? May be: positive integer
 # data_dir: Where is the data. May be: string path
 # out_dir: Where should output be written? May be: string path
+# all_images: Whether use all images for training. May be: True, False. 
+# Note: When all_images == False, model will be trained on training set and validated on validation set for hyperparameter tuning then test on test set
+# when all_images == True, model will be trained on training set + validation set and validated on test set, so the results of validation set and 
+# test set in tensorboard will be the same.
 
-python scripts/train_level_model.py block national base large inc low True 200 data outputs
-# python scripts/train_level_model.py block national base large pop low True 200 data outputs
-# python scripts/train_level_model.py block national RGB large inc low True 200 data outputs
-# python scripts/train_level_model.py block national RGB large pop low True 200 data outputs
-# python scripts/train_level_model.py block national nl large inc low True 200 data outputs
-# python scripts/train_level_model.py block national nl large pop low True 200 data outputs
-# python scripts/train_level_model.py block national base small inc low True 200 data outputs
-# python scripts/train_level_model.py block national base small pop low True 200 data outputs
-# python scripts/train_level_model.py block national RGB small inc low True 200 data outputs
-# python scripts/train_level_model.py block national RGB small pop low True 200 data outputs
-# python scripts/train_level_model.py block mw RGB small inc low True 200 data outputs
-# python scripts/train_level_model.py block mw RGB small pop low True 200 data outputs
-# python scripts/train_level_model.py block mw RGB small inc high True 200 data outputs
-# python scripts/train_level_model.py block mw RGB small pop high True 200 data outputs
-# python scripts/train_level_model.py block national base large inc low False 200 data outputs
-# python scripts/train_level_model.py block national base large pop low False 200 data outputs
-# python scripts/train_level_model.py block national RGB large inc low False 200 data outputs
-# python scripts/train_level_model.py block national RGB large pop low False 200 data outputs
-# python scripts/train_level_model.py block national nl large inc low False 200 data outputs
-# python scripts/train_level_model.py block national nl large pop low False 200 data outputs
-# python scripts/train_level_model.py block national base small inc low False 200 data outputs
-# python scripts/train_level_model.py block national base small pop low False 200 data outputs
-# python scripts/train_level_model.py block national RGB small inc low False 200 data outputs
-# python scripts/train_level_model.py block national RGB small pop low False 200 data outputs
-# python scripts/train_level_model.py block mw RGB small inc low False 200 data outputs
-# python scripts/train_level_model.py block mw RGB small pop low False 200 data outputs
-# python scripts/train_level_model.py block mw RGB small inc high False 200 data outputs
-# python scripts/train_level_model.py block mw RGB small pop high False 200 data outputs
+python scripts/train_level_model.py block national base large inc low True 200 data outputs False
+# python scripts/train_level_model.py block national base large pop low True 200 data outputs False
+# python scripts/train_level_model.py block national RGB large inc low True 200 data outputs False
+# python scripts/train_level_model.py block national RGB large pop low True 200 data outputs False
+# python scripts/train_level_model.py block national nl large inc low True 200 data outputs False
+# python scripts/train_level_model.py block national nl large pop low True 200 data outputs False
+# python scripts/train_level_model.py block national base small inc low True 200 data outputs False
+# python scripts/train_level_model.py block national base small pop low True 200 data outputs False
+# python scripts/train_level_model.py block national RGB small inc low True 200 data outputs False
+# python scripts/train_level_model.py block national RGB small pop low True 200 data outputs False
+# python scripts/train_level_model.py block mw RGB small inc low True 200 data outputs False
+# python scripts/train_level_model.py block mw RGB small pop low True 200 data outputs False
+# python scripts/train_level_model.py block mw RGB small inc high True 200 data outputs False
+# python scripts/train_level_model.py block mw RGB small pop high True 200 data outputs False
+# python scripts/train_level_model.py block national base large inc low False 200 data outputs False
+# python scripts/train_level_model.py block national base large pop low False 200 data outputs False
+# python scripts/train_level_model.py block national RGB large inc low False 200 data outputs False
+# python scripts/train_level_model.py block national RGB large pop low False 200 data outputs False
+# python scripts/train_level_model.py block national nl large inc low False 200 data outputs False
+# python scripts/train_level_model.py block national nl large pop low False 200 data outputs False
+# python scripts/train_level_model.py block national base small inc low False 200 data outputs False
+# python scripts/train_level_model.py block national base small pop low False 200 data outputs False
+# python scripts/train_level_model.py block national RGB small inc low False 200 data outputs False
+# python scripts/train_level_model.py block national RGB small pop low False 200 data outputs False
+# python scripts/train_level_model.py block mw RGB small inc low False 200 data outputs False
+# python scripts/train_level_model.py block mw RGB small pop low False 200 data outputs False
+# python scripts/train_level_model.py block mw RGB small inc high False 200 data outputs False
+# python scripts/train_level_model.py block mw RGB small pop high False 200 data outputs False
 
 # train difference model
 # Arguments:
@@ -62,7 +66,7 @@ python scripts/train_level_model.py block national base large inc low True 200 d
 # region: Region of analysis. May be: 'national' or 'mw' (for midwest)
 # model_type: What channels should be used. May be: 'base', 'RGB' (for RGB only), 'nl' (for base + nighlights)
 # size: What size of images should be used. May be:'large' (for 2.4 km^2) 'small' (for 1.2 km^2)
-# datatype: What outcome variable should be predicted. May be: 'inc' or 'pop'
+# datatype: What outcome variable should be predicted. May be: 'inc' or 'pop' or 'inc_pop'
 # resolution: What data resolution should be used. May be: 'high' or 'low'
 # with_feature: Should initial conditions be included. May be: True, False
 # epochs: How many epochs should be used for training? May be: positive integer
@@ -77,7 +81,7 @@ python scripts/train_level_model.py block national base large inc low True 200 d
     # level_nf
     # level_dr
     # level_epochs
-python scripts/train_diff_model.py block national base large inc low True 100 <dirname> outputs weights 1e-4 1e-8 16 200 32 0.5 200
-# python scripts/train_diff_model.py block national base large pop low True 100 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5 200
-# python scripts/train_diff_model.py block national base small inc low True 100 <dirname> outputs weights 1e-4 1e-8 16 200 32 0.5 200
-# python scripts/train_diff_model.py block national base small pop low True 100 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5 200
+python scripts/train_diff_model.py block national base large inc low True 100 <dirname> outputs weights 1e-4 1e-8 16 200 32 0.5 200 False
+# python scripts/train_diff_model.py block national base large pop low True 100 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5 200 False
+# python scripts/train_diff_model.py block national base small inc low True 100 <dirname> outputs weights 1e-4 1e-8 16 200 32 0.5 200 False
+# python scripts/train_diff_model.py block national base small pop low True 100 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5 200 False
