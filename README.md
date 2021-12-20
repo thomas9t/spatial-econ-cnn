@@ -41,6 +41,7 @@ Trained models are available here: [GoogleDrive](https://drive.google.com/drive/
 2. Move into `data/` directory and un-compress `tar -xvf ...`
 3. Move into `weights/` directory and un-compress `tar -xvf ..`
 4. Run the script `run.sh`. The script will create a virtual-environment, install dependencies and run scripts for training. There are several different run configurations listed in `run.sh` which can reproduce the various aspects of the paper (e.g. `RGB only` models or models with nighlights). Inspect `run.sh` for more detail.
+5. Run tensorboard by running `tensorboard --logdir='out_dir/logs'` in terminal to monitor the training process and validation results.
 
 ## Phase (3) - Predictions
 
