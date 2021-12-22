@@ -34,7 +34,7 @@ if mode == "small":
     IMG_COLS_RAW = 54  # The number of columns in the raw images (54 for small, 94 for large)
     CHANNEL_NAMES = CHANNEL_NAMES_SMALL
 else:
-    root_dir_id = "https://drive.google.com/drive/folders/1TyZ9FEFr0ySaPxXHLyIUet6jEB3NEwbe"  # The folder in Google Drive that contains the raw data (this will need to be changed if you created a new extract)
+    root_dir_id = "1TyZ9FEFr0ySaPxXHLyIUet6jEB3NEwbe"  # The folder in Google Drive that contains the raw data (this will need to be changed if you created a new extract)
     IMG_ROWS_RAW = 94  # The number of rows in the raw images (54 for small, 94 for large)
     IMG_COLS_RAW = 94  # The number of columns in the raw images (54 for small, 94 for large)
     CHANNEL_NAMES = CHANNEL_NAMES_LARGE
@@ -119,7 +119,7 @@ def main():
         with tf.compat.v1.Session() as sess:
             while True:
                 try:
-                    imgs, lat, lng, urban, nl = sess.run(it)
+                    imgs, lat, lng, urban = sess.run(it)
                     img_num += 1
                     
                     urban[np.isnan(urban)] = 0
