@@ -8,7 +8,7 @@
 python3 -m venv --system-site-packages ./scnn
 source ./scnn/bin/activate
 pip install --upgrade pip
-pip install --upgrade tensorflow numpy pytables pydrive pandas tqdm
+pip install --upgrade tensorflow numpy tables pydrive pandas tqdm
 
 
 # train level model
