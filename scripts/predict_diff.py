@@ -32,7 +32,7 @@ all_sample = get_bool(sys.argv[19]) # [True, False]
 test_type = 'prediction'
 
 if (region != 'national') | (model_type != 'base'):
-        sys.exit('Currently prediction only works for national base model')
+        sys.exit('Currently all-year prediction only works for national base model')
 
 ds_dir = '{}/{}_{}_{}_{}_sharded/{}_{}_{}_{}_{}_*-of-*.tfrecords' \
         .format(data_dir, size, construct, test_type, region, '*', construct, size, test_type, region)

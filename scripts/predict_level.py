@@ -31,7 +31,7 @@ all_sample = get_bool(sys.argv[18]) # [True, False]
 test_type = 'prediction'
 
 if (region != 'national') | (model_type != 'base'):
-        sys.exit('Currently prediction only works for national base model')
+        sys.exit('Currently all-year prediction only works for national base model')
 
 weight_dir = '{}/{}_{}_{}_level_{}{}_{}_{}{}/checkpoints/{}_{}_{}_{}_{}_{}' \
         .format(weight_dir, construct, size, region, model_type, '_feature' if with_feature else '', datatype, epochs, '_all' if all_sample else '', lr, l2, bs, ds, nf, dr)
