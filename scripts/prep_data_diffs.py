@@ -9,6 +9,8 @@ import sys
 from sklearn import preprocessing
 import tables
 
+from prep_data_levels import FEATURES
+
 # popshare = 0.85
 # urb = 0.1
 size = sys.argv[1] # small or large
@@ -28,12 +30,9 @@ def main():
     label = label[~label['log_pop_10'].isnull()]
     label = label[~label['popshare_00'].isnull()]
     label = label[~label['urban'].isnull()]
-#     label = label[label['popshare_00']<=popshare]
-#     label = label[label['urban_00']>=urb]
     label = label[label['sample']==1]
     
-    features = label.loc[:,'log_pop_cnty_00':'emp_prod_cnty_00']
-    features = features.drop(['log_inc_00','log_inc_10', 'log_inc_15'], axis=1)
+    features = label.loc[:,FEATURES]
     min_max_scaler = preprocessing.MinMaxScaler()
     min_max_scaler.fit(features)
     scaled_features = pd.DataFrame(min_max_scaler.transform(features), columns=features.columns)

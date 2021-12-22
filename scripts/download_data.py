@@ -22,10 +22,9 @@ ch.setLevel(logging.INFO)
 LOG.addHandler(ch)
 LOG.setLevel(logging.INFO)
 
-YEARS = list(range(0,20))
 mode = sys.argv[1]
-if mode not in ["large", "small"]:
-    raise Exception("Mode must be 'large' or 'small'")
+if mode not in ["large", "small", "mw"]:
+    raise Exception("Mode must be 'large','small', or 'mw'")
 path = f"../data/{mode}_images_all_years_raw.h5"  # Where should the output HDF5 file be written?
 
 if mode == "small":
@@ -33,47 +32,64 @@ if mode == "small":
     IMG_ROWS_RAW = 54  # The number of rows in the raw images (54 for small, 94 for large)
     IMG_COLS_RAW = 54  # The number of columns in the raw images (54 for small, 94 for large)
     CHANNEL_NAMES = CHANNEL_NAMES_SMALL
-else:
+elif mode == "large":
     root_dir_id = "1TyZ9FEFr0ySaPxXHLyIUet6jEB3NEwbe"  # The folder in Google Drive that contains the raw data (this will need to be changed if you created a new extract)
     IMG_ROWS_RAW = 94  # The number of rows in the raw images (54 for small, 94 for large)
     IMG_COLS_RAW = 94  # The number of columns in the raw images (54 for small, 94 for large)
     CHANNEL_NAMES = CHANNEL_NAMES_LARGE
-
+elif mode == "mw":
+    root_dir_id = "1qifSHdP_UOQKTvc2vzUgAIy3yq6id_HR"
+    IMG_ROWS_RAW = 108
+    IMG_COLS_RAW = 108
+    CHANNEL_NAMES = CHANNEL_NAMES_MW
     
 IMG_SHAPE = (IMG_ROWS_RAW, IMG_COLS_RAW, len(CHANNEL_NAMES))
-class IMGData(tables.IsDescription):
-    img0 = tables.Float32Col(shape=IMG_SHAPE)
-    img1 = tables.Float32Col(shape=IMG_SHAPE)
-    img2 = tables.Float32Col(shape=IMG_SHAPE)
-    img3 = tables.Float32Col(shape=IMG_SHAPE)
-    img4 = tables.Float32Col(shape=IMG_SHAPE)
-    img5 = tables.Float32Col(shape=IMG_SHAPE)
-    img6 = tables.Float32Col(shape=IMG_SHAPE)
-    img7 = tables.Float32Col(shape=IMG_SHAPE)
-    img8 = tables.Float32Col(shape=IMG_SHAPE)
-    img9 = tables.Float32Col(shape=IMG_SHAPE)
-    img10 = tables.Float32Col(shape=IMG_SHAPE)
-    img11 = tables.Float32Col(shape=IMG_SHAPE)
-    img12 = tables.Float32Col(shape=IMG_SHAPE)
-    img13 = tables.Float32Col(shape=IMG_SHAPE)
-    img14 = tables.Float32Col(shape=IMG_SHAPE)
-    img15 = tables.Float32Col(shape=IMG_SHAPE)
-    img16 = tables.Float32Col(shape=IMG_SHAPE)
-    img17 = tables.Float32Col(shape=IMG_SHAPE)
-    img18 = tables.Float32Col(shape=IMG_SHAPE)
-    img19 = tables.Float32Col(shape=IMG_SHAPE)
-    lat  = tables.Float32Col()
-    lng  = tables.Float32Col()
-    img_id = tables.Int64Col()
-    urban_share = tables.Float32Col()
+
+if mode in ["large", "small"]:
+    YEARS = list(range(0,20))
+    class IMGData(tables.IsDescription):
+        img0 = tables.Float32Col(shape=IMG_SHAPE)
+        img1 = tables.Float32Col(shape=IMG_SHAPE)
+        img2 = tables.Float32Col(shape=IMG_SHAPE)
+        img3 = tables.Float32Col(shape=IMG_SHAPE)
+        img4 = tables.Float32Col(shape=IMG_SHAPE)
+        img5 = tables.Float32Col(shape=IMG_SHAPE)
+        img6 = tables.Float32Col(shape=IMG_SHAPE)
+        img7 = tables.Float32Col(shape=IMG_SHAPE)
+        img8 = tables.Float32Col(shape=IMG_SHAPE)
+        img9 = tables.Float32Col(shape=IMG_SHAPE)
+        img10 = tables.Float32Col(shape=IMG_SHAPE)
+        img11 = tables.Float32Col(shape=IMG_SHAPE)
+        img12 = tables.Float32Col(shape=IMG_SHAPE)
+        img13 = tables.Float32Col(shape=IMG_SHAPE)
+        img14 = tables.Float32Col(shape=IMG_SHAPE)
+        img15 = tables.Float32Col(shape=IMG_SHAPE)
+        img16 = tables.Float32Col(shape=IMG_SHAPE)
+        img17 = tables.Float32Col(shape=IMG_SHAPE)
+        img18 = tables.Float32Col(shape=IMG_SHAPE)
+        img19 = tables.Float32Col(shape=IMG_SHAPE)
+        lat  = tables.Float32Col()
+        lng  = tables.Float32Col()
+        img_id = tables.Int64Col()
+        urban_share = tables.Float32Col()
+elif mode == "mw":
+    YEARS = ["0", "10", "15"]
+    class IMGData(tables.IsDescription):
+        img0 = tables.Float32Col(shape=IMG_SHAPE)
+        img10 = tables.Float32Col(shape=IMG_SHAPE)
+        img15 = tables.Float32Col(shape=IMG_SHAPE)
+        lat  = tables.Float32Col()
+        lng  = tables.Float32Col()
+        img_id = tables.Int64Col()
+        urban_share = tables.Float32Col()
 
 
 def main():
     tempdir = f"../temp_{mode}"
     if not os.path.exists(tempdir):
         os.mkdir(tempdir)
-    if not os.path.exists("../output"):
-        os.mkdir("../output")
+    if not os.path.exists("../outputs"):
+        os.mkdir("../outputs")
     h5_open_mode = "w" if not os.path.exists(path) else "a"
     h5_file = tables.open_file(path, mode=h5_open_mode)
     if "/data" not in h5_file:
@@ -82,7 +98,7 @@ def main():
     
     # Used to keep track of what data has already been downloaded
     # in case the pod crashes and we need to restart
-    processed_paths_file = f"../output/processed_paths_{mode}.txt"
+    processed_paths_file = f"../outputs/processed_paths_{mode}.txt"
     if not os.path.exists(processed_paths_file):
         with open(processed_paths_file, "w") as fh:
             pass
@@ -101,7 +117,7 @@ def main():
     ix = 0
     invalid_data = 0
 
-    outfh_path = f"../output/valid_imgs_{mode}.txt"
+    outfh_path = f"../outputs/valid_imgs_{mode}.txt"
     out_fh = open(outfh_path, "w" if not os.path.exists(outfh_path) else "a")
     if mode == "w":
         out_fh.write("filename,img_num_in_file,img_id,lat,lng,urban\n")

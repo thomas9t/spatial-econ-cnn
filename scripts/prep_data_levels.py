@@ -9,6 +9,18 @@ import sys
 from sklearn import preprocessing
 import tables
 
+FEATURES = ['log_pop_cnty_00', 'log_pop_cnty_10', 'log_pop_cnty_15',
+            'log_inc_cnty_00', 'log_inc_cnty_10', 'log_inc_cnty_15', 'area',
+            'image_coverage', 'white_00', 'black_00', 'hispanic_00', 'workage_00',
+            'female_00', 'groupshare_00', 'emp_sec1_00', 'emp_sec2_00',
+            'emp_sec3_00', 'emp_sec4_00', 'emp_sec5_00', 'emp_sec6_00',
+            'emp_sec7_00', 'emp_sec8_00', 'emp_sec9_00', 'emp_sec10_00',
+            'emp_sec11_00', 'emp_sec12_00', 'emp_sec13_00', 'emp_sec14_00',
+            'emp_sec15_00', 'emp_sec16_00', 'emp_sec17_00', 'emp_sec18_00',
+            'emp_sec19_00', 'emp_sec20_00', 'emp_bus_serv_00', 'emp_nonbus_serv_00',
+            'emp_prod_00', 'emp_bus_serv_cnty_00', 'emp_nonbus_serv_cnty_00',
+            'emp_prod_cnty_00']
+
 # popshare = 0.85
 # urb = 0.1
 size = sys.argv[1] # small or large
@@ -27,12 +39,9 @@ def main():
     label = label[~label['log_pop_10'].isnull()]
     label = label[~label['popshare_00'].isnull()]
     label = label[~label['urban'].isnull()]
-#     label = label[label['popshare_00']<=popshare]
-#     label = label[label['urban_00']>=urb]
     label = label[label['sample']==1]
     
-    features = label.loc[:,'log_pop_cnty_00':'emp_prod_cnty_00']
-    features = features.drop(['log_inc_00','log_inc_10', 'log_inc_15'], axis=1)
+    features = label.loc[:,FEATURES]
     min_max_scaler = preprocessing.MinMaxScaler()
     min_max_scaler.fit(features)
     scaled_features = pd.DataFrame(min_max_scaler.transform(features), columns=features.columns)
@@ -42,7 +51,7 @@ def main():
     write_example(dataset, label, 'train', scaler, scaled_features, categorical_values)
     write_example(dataset, label, 'validation', scaler, scaled_features, categorical_values)
     write_example(dataset, label, 'test', scaler, scaled_features, categorical_values)
-    print ("Complete!")
+    print("Complete!")
     
 def write_example(dataset, label, subset, scaler, scaled_features, categorical_values):
     print("Start creating {} set...".format(subset))
