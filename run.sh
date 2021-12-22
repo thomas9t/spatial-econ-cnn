@@ -85,3 +85,100 @@ python scripts/train_diff_model.py block national base large inc low True 100 <d
 # python scripts/train_diff_model.py block national base large pop low True 100 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5 200 False
 # python scripts/train_diff_model.py block national base small inc low True 100 <dirname> outputs weights 1e-4 1e-8 16 200 32 0.5 200 False
 # python scripts/train_diff_model.py block national base small pop low True 100 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5 200 False
+
+
+
+
+# make predictions for levels
+
+# base
+python make_predictions_level.py block national base large inc low True 200 <dirname> outputs weights 1e-4 1e-6 16 50 32 0.5
+python make_predictions_level.py block national base large inc low False 200 <dirname> outputs weights 1e-4 1e-8 16 50 32 0.5
+python make_predictions_level.py block national base large pop low True 200 <dirname> outputs weights 1e-4 1e-7 16 100 32 0.5
+python make_predictions_level.py block national base large pop low False 200 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5
+python make_predictions_level.py block national base small inc low True 200 <dirname> outputs weights 1e-4 1e-8 16 100 32 0.5
+python make_predictions_level.py block national base small inc low False 200 <dirname> outputs weights 1e-4 1e-8 16 100 32 0.5
+python make_predictions_level.py block national base small pop low True 200 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5
+python make_predictions_level.py block national base small pop low False 200 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5
+ 
+# rgb
+python make_predictions_level.py block national RGB large inc low True 200 <dirname> outputs weights 1e-4 1e-6 16 50 32 0.5
+python make_predictions_level.py block national RGB large inc low False 200 <dirname> outputs weights 1e-4 1e-8 16 50 32 0.5
+python make_predictions_level.py block national RGB large pop low True 200 <dirname> outputs weights 1e-4 1e-7 16 100 32 0.5
+python make_predictions_level.py block national RGB large pop low False 200 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5
+
+# nl
+python make_predictions_level.py block national nl large inc low True 200 <dirname> outputs weights 1e-4 1e-6 16 50 32 0.5
+python make_predictions_level.py block national nl large inc low False 200 <dirname> outputs weights 1e-4 1e-8 16 100 32 0.5
+python make_predictions_level.py block national nl large pop low True 200 <dirname> outputs weights 1e-4 1e-6 16 100 32 0.5
+python make_predictions_level.py block national nl large pop low False 200 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5
+
+# mw
+python make_predictions_level.py block mw RGB small inc low False 200 <dirname> outputs weights 1e-4 1e-7 16 200 32 0.5
+python make_predictions_level.py block mw RGB small inc high False 200 <dirname> outputs weights 1e-4 1e-7 16 200 32 0.5
+python make_predictions_level.py block mw RGB small pop low False 200 <dirname> outputs weights 1e-4 1e-7 16 200 32 0.5
+python make_predictions_level.py block mw RGB small pop high False 200 <dirname> outputs weights 1e-4 1e-7 16 200 32 0.5
+
+python make_predictions_level.py block mw RGB small inc low True 200 <dirname> outputs weights 1e-4 1e-7 16 200 32 0.5
+python make_predictions_level.py block mw RGB small inc high True 200 <dirname> outputs weights 1e-4 1e-7 16 200 32 0.5
+python make_predictions_level.py block mw RGB small pop low True 200 <dirname> outputs weights 1e-4 1e-7 16 200 32 0.5
+python make_predictions_level.py block mw RGB small pop high True 200 <dirname> outputs weights 1e-4 1e-7 16 200 32 0.5
+
+# inc/pop model
+python make_predictions_level.py block national base large inc_pop low True 200 <dirname> outputs weights 1e-5 1e-7 16 200 32 0.5
+python make_predictions_level.py block national base large inc_pop low False 200 <dirname> outputs weights 1e-4 1e-8 16 200 32 0.5
+python make_predictions_level.py block national base small inc_pop low True 200 <dirname> outputs weights 1e-5 1e-6 16 200 32 0.5
+python make_predictions_level.py block national base small inc_pop low False 200 <dirname> outputs weights 1e-4 1e-8 16 200 32 0.5
+
+# for all years from 2000 to 2019
+python predict_levels.py block national base size datatype low with_feature <data_dir> <out_dir> <weight_dir> True lr l2 bs ds nf dr epochs True
+
+
+
+
+# make predictions for diffs
+
+# base
+python make_predictions_diff.py block national base large inc low True 100 <dirname> outputs weights 1e-5 1e-8 16 50 32 0.5
+python make_predictions_diff.py block national base large inc low False 100 <dirname> outputs weights 1e-5 1e-7 16 200 32 0.5
+python make_predictions_diff.py block national base large pop low True 100 <dirname> outputs weights 1e-5 1e-8 16 50 32 0.5
+python make_predictions_diff.py block national base large pop low False 100 <dirname> outputs weights 1e-4 1e-6 16 50 32 0.5
+python make_predictions_diff.py block national base small inc low True 100 <dirname> outputs weights 1e-5 1e-8 16 50 32 0.5
+python make_predictions_diff.py block national base small inc low False 100 <dirname> outputs weights 1e-5 1e-8 16 50 32 0.5
+python make_predictions_diff.py block national base small pop low True 100 <dirname> outputs weights 1e-5 1e-8 16 50 32 0.5
+python make_predictions_diff.py block national base small pop low False 100 <dirname> outputs weights 1e-4 1e-7 16 50 32 0.5
+ 
+# rgb
+python make_predictions_diff.py block national RGB large inc low True 100 <dirname> outputs weights 1e-4 1e-8 16 50 32 0.5
+python make_predictions_diff.py block national RGB large inc low False 100 <dirname> outputs weights 1e-5 1e-8 16 50 32 0.5
+python make_predictions_diff.py block national RGB large pop low True 100 <dirname> outputs weights 1e-4 1e-8 16 100 32 0.5
+python make_predictions_diff.py block national RGB large pop low False 100 <dirname> outputs weights 1e-5 1e-8 16 50 32 0.5
+
+# mw
+python make_predictions_diff.py block mw RGB small inc low False 100 <dirname> outputs weights 1e-5 1e-8 16 200 32 0.5
+python make_predictions_diff.py block mw RGB small inc high False 100 <dirname> outputs weights 1e-5 1e-8 16 200 32 0.5
+python make_predictions_diff.py block mw RGB small pop low False 100 <dirname> outputs weights 1e-5 1e-6 16 200 32 0.5
+python make_predictions_diff.py block mw RGB small pop high False 100 <dirname> outputs weights 1e-5 1e-8 16 200 32 0.5
+
+python make_predictions_diff.py block mw RGB small inc low True 100 <dirname> outputs weights 1e-5 1e-8 16 200 32 0.5
+python make_predictions_diff.py block mw RGB small inc high True 100 <dirname> outputs weights 1e-5 1e-8 16 200 32 0.5
+python make_predictions_diff.py block mw RGB small pop low True 100 <dirname> outputs weights 1e-5 1e-8 16 200 32 0.5
+python make_predictions_diff.py block mw RGB small pop high True 100 <dirname> outputs weights 1e-5 1e-8 16 200 32 0.5
+
+# nl
+python make_predictions_diff.py block national nl large inc low True 100 <dirname> outputs weights 1e-4 1e-8 16 50 32 0.5
+python make_predictions_diff.py block national nl large inc low False 100 <dirname> outputs weights 1e-5 1e-8 16 50 32 0.5
+python make_predictions_diff.py block national nl large pop low True 100 <dirname> outputs weights 1e-4 1e-8 16 50 32 0.5
+python make_predictions_diff.py block national nl large pop low False 100 <dirname> outputs weights 1e-5 1e-7 16 100 32 0.5
+
+# inc/pop
+
+python make_predictions_diff.py block national base large inc_pop low True 100 <dirname> outputs weights 1e-4 1e-8 16 200 32 0.5
+python make_predictions_diff.py block national base large inc_pop low False 100 <dirname> outputs weights 1e-4 1e-7 16 200 32 0.5
+python make_predictions_diff.py block national base small inc_pop low True 100 <dirname> outputs weights 1e-4 1e-8 16 200 32 0.5
+python make_predictions_diff.py block national base small inc_pop low False 100 <dirname> outputs weights 1e-4 1e-6 16 200 32 0.5
+
+# for all years from 2000 to 2019 seperated by x years
+python predict_diff.py block national base size datatype low with_feature <data_dir> <out_dir> <weight_dir> lr l2 bs ds nf dr epochs x True
+
+ 
