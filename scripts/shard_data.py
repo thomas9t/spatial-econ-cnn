@@ -12,12 +12,13 @@ size = sys.argv[1]
 construct = sys.argv[2] # BG or block
 model = sys.argv[3] # all or diff
 n_images_shard = int(sys.argv[4])
-train = tf.data.TFRecordDataset('../temp/train_{}_{}_{}_national.tfrecords'.format(construct, size, model))
-valid = tf.data.TFRecordDataset('../temp/validation_{}_{}_{}_national.tfrecords'.format(construct, size, model))
-test = tf.data.TFRecordDataset('../temp/test_{}_{}_{}_national.tfrecords'.format(construct, size, model))
-if not os.path.exists('../temp/{}_{}_{}_sharded'.format(size, construct, model)):
-    os.makedirs('../temp/{}_{}_{}_sharded'.format(size, construct, model))
-out_dir = '../temp/{}_{}_{}_sharded/{}_{}_{}_{}_national_{}.tfrecords'.format(size, construct, model, '{}', construct, size, model, '{}')
+region = sys.argv[5] # national or mw 
+train = tf.data.TFRecordDataset('../temp/train_{}_{}_{}_{}.tfrecords'.format(construct, size, model, region))
+valid = tf.data.TFRecordDataset('../temp/validation_{}_{}_{}_{}.tfrecords'.format(construct, size, model, region))
+test = tf.data.TFRecordDataset('../temp/test_{}_{}_{}_{}.tfrecords'.format(construct, size, model, region))
+if not os.path.exists('../temp/{}_{}_{}_{}'.format(size, construct, model, region)):
+    os.makedirs('../temp/{}_{}_{}_{}'.format(size, construct, model, region))
+out_dir = '../temp/{}_{}_{}_{}/{}_{}_{}_{}_{}_{}.tfrecords'.format(size, construct, model, region, '{}', construct, size, model, region, '{}')
 
 
 def main():
