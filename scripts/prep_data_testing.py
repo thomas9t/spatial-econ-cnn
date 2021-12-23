@@ -66,7 +66,7 @@ def main():
     scaled_features = pd.DataFrame(min_max_scaler.transform(features), columns=features.columns)
     
     categorical_values = pd.get_dummies(label.loc[:,'county':'state'], columns=['county','state'])
-    print("Prep {} dataset for {} {} {} images".format("testing", construct, region, size))
+    print("Prep testing dataset for {} {} {} images".format(construct, region, size))
     write_example(dataset, label, 'train', scaler, scaled_features, categorical_values)
     write_example(dataset, label, 'validation', scaler, scaled_features, categorical_values)
     write_example(dataset, label, 'test', scaler, scaled_features, categorical_values)
