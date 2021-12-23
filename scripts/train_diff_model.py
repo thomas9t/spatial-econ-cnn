@@ -39,7 +39,7 @@ HP_DS = hp.HParam('ds', hp.Discrete([50, 100, 200]))
 HP_NF = hp.HParam('nf', hp.Discrete([32]))
 HP_DR = hp.HParam('dr', hp.Discrete([0.5]))
 
-ds_dir = '{}/{}_{}_{}_{}_sharded/{}_{}_{}_{}_{}_*-of-*.tfrecords' \
+ds_dir = '{}/{}_{}_{}_{}/{}_{}_{}_{}_{}_*-of-*.tfrecords' \
     .format(data_dir, size, construct, '{}', region, '{}', construct, size, '{}', region)
 weight_dir = '{}/{}_{}_{}_level_{}{}{}_{}_{}{}/checkpoints/{}_{}_{}_{}_{}_{}' \
     .format(weight_dir, construct, size, region, model_type, '_feature' if with_feature else '',
