@@ -21,6 +21,8 @@ FEATURES = ['log_pop_cnty_00', 'log_pop_cnty_10', 'log_pop_cnty_15',
             'emp_prod_00', 'emp_bus_serv_cnty_00', 'emp_nonbus_serv_cnty_00',
             'emp_prod_cnty_00']
 
+ROOT = os.environ.get("CNN_PROJECT_ROOT", "../")
+
 # popshare = 0.85
 # urb = 0.1
 size = sys.argv[1] # small or large
@@ -45,10 +47,10 @@ elif size == "small":
 def main():
     scaler = np.array(TOP_CODES).astype(np.float32).reshape(1,-1)
     if region == "mw":
-        dataset = tables.open_file("../temp/high_resolution_small_images_raw.h5")
+        dataset = tables.open_file(f"{ROOT}/temp/high_resolution_small_images_raw.h5")
     elif region == "national":
-        dataset = tables.open_file("../temp/{}_images_all_years_raw.h5".format(size))
-    label = pd.read_csv('../temp/{}cw_labelled_imgs_{}_{}.csv'.format(construct, region, size))
+        dataset = tables.open_file(f"{ROOT}/temp/{size}_images_all_years_raw.h5")
+    label = pd.read_csv(f'{ROOT}/temp/{construct}cw_labelled_imgs_{region}_{size}.csv')
     label = label[~label['log_inc_10'].isnull()]
     label = label[~label['log_inc_00'].isnull()]
     label = label[~label['log_inc_15'].isnull()]
@@ -74,7 +76,7 @@ def main():
     
 def write_example(dataset, label, subset, scaler, scaled_features, categorical_values):
     print("Start creating {} set...".format(subset))
-    with tf.io.TFRecordWriter('../temp/{}_{}_{}_{}_{}.tfrecords'.format(subset,construct,size, "15", region)) as writer:
+    with tf.io.TFRecordWriter(f'{ROOT}/temp/{subset}_{construct}_{size}_15_{region}.tfrecords') as writer:
         nr = 0
         ne = 0
         for node in dataset.root:

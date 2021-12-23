@@ -7,18 +7,19 @@ from tqdm import tqdm
 # tf.config.experimental.set_memory_growth(physical_devices[0], True)
 # tf.config.threading.set_inter_op_parallelism_threads(1)
 
+ROOT = os.environ.get("CNN_PROJECT_ROOT", "../")
 
 size = sys.argv[1]
 construct = sys.argv[2] # BG or block
 model = sys.argv[3] # all or diff
 n_images_shard = int(sys.argv[4])
 region = sys.argv[5] # national or mw 
-train = tf.data.TFRecordDataset('../temp/train_{}_{}_{}_{}.tfrecords'.format(construct, size, model, region))
-valid = tf.data.TFRecordDataset('../temp/validation_{}_{}_{}_{}.tfrecords'.format(construct, size, model, region))
-test = tf.data.TFRecordDataset('../temp/test_{}_{}_{}_{}.tfrecords'.format(construct, size, model, region))
-if not os.path.exists('../temp/{}_{}_{}_{}'.format(size, construct, model, region)):
-    os.makedirs('../temp/{}_{}_{}_{}'.format(size, construct, model, region))
-out_dir = '../temp/{}_{}_{}_{}/{}_{}_{}_{}_{}_{}.tfrecords'.format(size, construct, model, region, '{}', construct, size, model, region, '{}')
+train = tf.data.TFRecordDataset('{}/temp/train_{}_{}_{}_{}.tfrecords'.format(ROOT, construct, size, model, region))
+valid = tf.data.TFRecordDataset('{}/temp/validation_{}_{}_{}_{}.tfrecords'.format(ROOT, construct, size, model, region))
+test = tf.data.TFRecordDataset('{}/temp/test_{}_{}_{}_{}.tfrecords'.format(ROOT, construct, size, model, region))
+if not os.path.exists('{}/temp/{}_{}_{}_{}'.format(ROOT, size, construct, model, region)):
+    os.makedirs('{}/temp/{}_{}_{}_{}'.format(ROOT, size, construct, model, region))
+out_dir = '{}/temp/{}_{}_{}_{}/{}_{}_{}_{}_{}_{}.tfrecords'.format(ROOT, size, construct, model, region, '{}', construct, size, model, region, '{}')
 
 
 def main():

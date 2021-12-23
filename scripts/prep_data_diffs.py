@@ -11,6 +11,8 @@ import tables
 
 from prep_data_levels import FEATURES
 
+ROOT = os.environ.get("CNN_PROJECT_ROOT", "../")
+
 # popshare = 0.85
 # urb = 0.1
 size = sys.argv[1] # small or large
@@ -36,10 +38,10 @@ elif size == "small":
 def main():
     scaler = np.array(TOP_CODES).astype(np.float32).reshape(1,-1) 
     if region == "mw":
-        dataset = tables.open_file("../temp/high_resolution_small_images_raw.h5")
+        dataset = tables.open_file(f"{ROOT}/temp/high_resolution_small_images_raw.h5")
     elif region == "national":
-        dataset = tables.open_file("../temp/{}_images_all_years_raw.h5".format(size))
-    label = pd.read_csv('../temp/{}cw_labelled_imgs_{}_{}.csv'.format(construct, region, size))
+        dataset = tables.open_file(f"{ROOT}/temp/{size}_images_all_years_raw.h5")
+    label = pd.read_csv(f'{ROOT}/temp/{construct}cw_labelled_imgs_{region}_{size}.csv')
     label = label[~label['log_inc_10'].isnull()]
     label = label[~label['log_inc_00'].isnull()]
     label = label[~label['log_inc_15'].isnull()]
@@ -65,7 +67,7 @@ def main():
     
 def write_example(dataset, label, subset, scaler, scaled_features, categorical_values):
     print("Start creating {} diff set...".format(subset))
-    with tf.io.TFRecordWriter('../temp/{}_{}_{}_diff_national.tfrecords'.format(subset, construct, size)) as writer:
+    with tf.io.TFRecordWriter(f'{ROOT}/temp/{subset}_{construct}_{size}_diff_national.tfrecords') as writer:
         nr = 0
         ne = 0
         for node in dataset.root:
