@@ -35,7 +35,7 @@ if (region != 'national') | (model_type != 'base'):
 
 weight_dir = '{}/{}_{}_{}_level_{}{}_{}_{}{}/checkpoints/{}_{}_{}_{}_{}_{}' \
         .format(weight_dir, construct, size, region, model_type, '_feature' if with_feature else '', datatype, epochs, '_all' if all_sample else '', lr, l2, bs, ds, nf, dr)
-ds_dir = '{}/{}_{}_{}_{}_sharded/{}_{}_{}_{}_{}_*-of-*.tfrecords' \
+ds_dir = '{}/{}_{}_{}_{}/{}_{}_{}_{}_{}_*-of-*.tfrecords' \
         .format(data_dir, size, construct, test_type, region, '*', construct, size, test_type, region)
 
 def main():

@@ -38,7 +38,7 @@ weight_dir = '{}/{}_{}_{}_diff_{}{}{}_{}_{}/checkpoints/{}_{}_{}_{}_{}_{}'\
     .format(weight_dir, construct, size, region, model_type, '_feature' if with_feature else '',
             '_high' if resolution == 'high' else '', datatype, epochs, lr, l2,
             bs, ds, nf, dr)
-ds_dir = '{}/{}_{}_{}_{}_sharded/{}_{}_{}_{}_{}_*-of-*.tfrecords'\
+ds_dir = '{}/{}_{}_{}_{}/{}_{}_{}_{}_{}_*-of-*.tfrecords'\
     .format(data_dir, size, construct, '{}', region, '{}', construct, size, '{}', region)
 
 

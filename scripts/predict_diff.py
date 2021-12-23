@@ -34,7 +34,7 @@ test_type = 'prediction'
 if (region != 'national') | (model_type != 'base'):
         sys.exit('Currently all-year prediction only works for national base model')
 
-ds_dir = '{}/{}_{}_{}_{}_sharded/{}_{}_{}_{}_{}_*-of-*.tfrecords' \
+ds_dir = '{}/{}_{}_{}_{}/{}_{}_{}_{}_{}_*-of-*.tfrecords' \
         .format(data_dir, size, construct, test_type, region, '*', construct, size, test_type, region)
 
 weight_dir = '{}/{}_{}_{}_diff_{}{}_{}_{}{}/checkpoints/{}_{}_{}_{}_{}_{}' \
