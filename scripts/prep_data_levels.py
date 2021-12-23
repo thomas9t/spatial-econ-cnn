@@ -25,8 +25,7 @@ FEATURES = ['log_pop_cnty_00', 'log_pop_cnty_10', 'log_pop_cnty_15',
 # urb = 0.1
 size = sys.argv[1] # small or large
 construct = sys.argv[2] # BG or block
-mode = sys.argv[3] # training or testing
-region = sys.argv[4] # national or mw
+region = sys.argv[3] # national or mw
 
 if size == "large":
     if region == "mw":
@@ -67,7 +66,7 @@ def main():
     scaled_features = pd.DataFrame(min_max_scaler.transform(features), columns=features.columns)
     
     categorical_values = pd.get_dummies(label.loc[:,'county':'state'], columns=['county','state'])
-    print("Prep {} dataset for {} {} {} images".format(mode, construct, region, size))
+    print("Prep {} dataset for {} {} {} images".format("training", construct, region, size))
     write_example(dataset, label, 'train', scaler, scaled_features, categorical_values)
     write_example(dataset, label, 'validation', scaler, scaled_features, categorical_values)
     write_example(dataset, label, 'test', scaler, scaled_features, categorical_values)
@@ -75,7 +74,7 @@ def main():
     
 def write_example(dataset, label, subset, scaler, scaled_features, categorical_values):
     print("Start creating {} set...".format(subset))
-    with tf.io.TFRecordWriter('../temp/{}_{}_{}_{}_{}.tfrecords'.format(subset,construct,size, "all" if mode == "training" else "15", region)) as writer:
+    with tf.io.TFRecordWriter('../temp/{}_{}_{}_{}_{}.tfrecords'.format(subset,construct,size, "all", region)) as writer:
         nr = 0
         ne = 0
         for node in dataset.root:
@@ -86,26 +85,18 @@ def write_example(dataset, label, subset, scaler, scaled_features, categorical_v
                 img_id = np.array(row["img_id"], dtype=np.int)
                 check_id = (label['img_id'] == img_id)
                 if check_id.any() and (label[check_id]['subset']==subset).bool():
-                    if (mode == "training") & (region == "national"):
+                    if region == "national":
                         example = get_serialize(row, label, 0, scaler, scaled_features, check_id, img_id, categorical_values)
                         writer.write(example)
                         example = get_serialize(row, label, 10, scaler, scaled_features, check_id, img_id, categorical_values)
                         writer.write(example)
                         ne += 2
-                    elif (mode == "training") & (region == "mw"):
+                    elif region == "mw":
                         example = get_serialize_mw(row, label, 0, scaler, scaled_features, check_id, img_id)
                         writer.write(example)
                         example = get_serialize_mw(row, label, 10, scaler, scaled_features, check_id, img_id)
                         writer.write(example)
                         ne += 2
-                    elif (mode == "testing") & (region == "national"):
-                        example = get_serialize_test(row, label, scaler, scaled_features, check_id, img_id, categorical_values)
-                        writer.write(example)
-                        ne += 1
-                    elif (mode == "testing") & (region == "mw"):
-                        example = get_serialize_mw_test(row, label, scaler, scaled_features, check_id, img_id)
-                        writer.write(example)
-                        ne += 1
                     else:
                         sys.exit('invalid config')
         print ("Finish! Adding {} samples in {} set".format(ne, subset))
@@ -141,28 +132,6 @@ def serialize_example(image, img_id, inc, pop, lat, lng, urban_share, pop_share,
     example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
     return example_proto.SerializeToString()
 
-def serialize_example_test(image0, image10, image15, img_id, inc0, inc10, inc15,
-                      pop0, pop10, lat, lng, urban_share, pop_share, features, cats):
-    feature = {
-        'image0': _bytes_feature(image0),
-        'image10': _bytes_feature(image10),
-        'image15': _bytes_feature(image15),
-        'img_id': _int64_feature(img_id),
-        'inc0': _float_feature(inc0),
-        'inc10': _float_feature(inc10),
-        'inc15': _float_feature(inc15),
-        'pop0': _float_feature(pop0),
-        'pop10': _float_feature(pop10),
-        'lat': _float_feature(lat),
-        'lng': _float_feature(lng),
-        'urban_share': _float_feature(urban_share),
-        'pop_share': _float_feature(pop_share),
-        'baseline_features': _bytes_feature(features),
-        'categorical_values': _bytes_feature(cats)
-    }
-    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
-    return example_proto.SerializeToString()
-
 def get_serialize(row, label, year, scaler, scaled_features, check_id, img_id, categorical_values):
     img = row['img{}'.format(year)].astype(np.float32)
     img = img / scaler
@@ -183,37 +152,6 @@ def get_serialize(row, label, year, scaler, scaled_features, check_id, img_id, c
     cats = np.array(categorical_values[check_id.to_numpy()], dtype=np.float32)
     cats_bytes = tf.io.serialize_tensor(cats)
     return serialize_example(img_bytes, img_id, inc, pop, lat, lng, urban_share, pop_share, features_bytes, cats_bytes)
-
-def get_serialize_test(row, label, scaler, scaled_features, check_id, img_id, categorical_values):
-    img0 = row['img{}'.format(0)].astype(np.float32)
-    img0 = img0 / scaler
-    img0 = img0[7:-7, 7:-7, :]
-    img0_bytes = tf.io.serialize_tensor(img0)
-    img10 = row['img{}'.format(10)].astype(np.float32)
-    img10 = img10 / scaler
-    img10 = img10[7:-7, 7:-7, :]
-    img10_bytes = tf.io.serialize_tensor(img10)
-    img15 = row['img{}'.format(15)].astype(np.float32)
-    img15 = img15 / scaler
-    img15 = img15[7:-7, 7:-7, :]
-    img15_bytes = tf.io.serialize_tensor(img15)
-    lat = np.array(row["lat"], dtype=np.float32)
-    lng = np.array(row["lng"], dtype=np.float32)
-    urban_share = np.array(label[check_id]['urban'].item(), dtype=np.float32)
-    pop_share = np.array(label[check_id]['popshare_00'].item(), dtype=np.float32)
-    inc0 = np.array(label[check_id]['log_inc_00'].item(), dtype=np.float32)
-    pop0 = np.array(label[check_id]['log_pop_00'].item(), dtype=np.float32)
-    inc10 = np.array(label[check_id]['log_inc_10'].item(), dtype=np.float32)
-    pop10 = np.array(label[check_id]['log_pop_10'].item(), dtype=np.float32)
-    inc15 = np.array(label[check_id]['log_inc_15'].item(), dtype=np.float32)
-    features = scaled_features[check_id.to_numpy()]
-    features = np.concatenate((features.loc[:, ['log_pop_cnty_{}'.format('00'), 'log_inc_cnty_{}'.format('00')]],
-                               features.loc[:,'white_00':]), axis=-1)
-    features = features.astype(np.float32)
-    features_bytes = tf.io.serialize_tensor(features)
-    cats = np.array(categorical_values[check_id.to_numpy()], dtype=np.float32)
-    cats_bytes = tf.io.serialize_tensor(cats)
-    return serialize_example_test(img0_bytes, img10_bytes, img15_bytes, img_id, inc0, inc10, inc15, pop0, pop10, lat, lng, urban_share, pop_share, features_bytes, cats_bytes)
 
 
 def serialize_example_mw(image_low, image_high, img_id, inc, pop, lat, lng, urban_share, pop_share, features):
@@ -253,70 +191,6 @@ def get_serialize_mw(row, label, year, scaler, scaled_features, check_id, img_id
     features = features.astype(np.float32)
     features_bytes = tf.io.serialize_tensor(features)
     return serialize_example_mw(img_low_bytes, img_high_bytes, img_id, inc, pop, lat, lng, urban_share, pop_share, features_bytes)
-
-
-def serialize_example_mw_test(image_low_0, image_low_10, image_low_15, image_high_0, image_high_10, image_high_15, img_id,
-                      inc0, inc10, inc15, pop0, pop10, lat, lng, urban_share, pop_share, features):
-    feature = {
-        'image_low_0': _bytes_feature(image_low_0),
-        'image_low_10': _bytes_feature(image_low_10),
-        'image_low_15': _bytes_feature(image_low_15),
-        'image_high_0': _bytes_feature(image_high_0),
-        'image_high_10': _bytes_feature(image_high_10),
-        'image_high_15': _bytes_feature(image_high_15),
-        'img_id': _int64_feature(img_id),
-        'inc0': _float_feature(inc0),
-        'inc10': _float_feature(inc10),
-        'inc15': _float_feature(inc15),
-        'pop0': _float_feature(pop0),
-        'pop10': _float_feature(pop10),
-        'lat': _float_feature(lat),
-        'lng': _float_feature(lng),
-        'urban_share': _float_feature(urban_share),
-        'pop_share': _float_feature(pop_share),
-        'baseline_features': _bytes_feature(features)
-    }
-    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
-    return example_proto.SerializeToString()
-
-
-def get_serialize_mw_test(row, label, scaler, scaled_features, check_id, img_id):
-    img0 = row['img{}'.format(0)].astype(np.float32)
-    img0 = img0 / scaler
-    img0 = img0[14:-14, 14:-14, :]
-    img_low_0 = img0[:, :, 0:3]
-    img_high_0 = img0[:, :, 3:6]
-    img_low_bytes_0 = tf.io.serialize_tensor(img_low_0)
-    img_high_bytes_0 = tf.io.serialize_tensor(img_high_0)
-    img10 = row['img{}'.format(10)].astype(np.float32)
-    img10 = img10 / scaler
-    img10 = img10[14:-14, 14:-14, :]
-    img_low_10 = img10[:, :, 0:3]
-    img_high_10 = img10[:, :, 3:6]
-    img_low_bytes_10 = tf.io.serialize_tensor(img_low_10)
-    img_high_bytes_10 = tf.io.serialize_tensor(img_high_10)
-    img15 = row['img{}'.format(15)].astype(np.float32)
-    img15 = img15 / scaler
-    img15 = img15[14:-14, 14:-14, :]
-    img_low_15 = img15[:, :, 0:3]
-    img_high_15 = img15[:, :, 3:6]
-    img_low_bytes_15 = tf.io.serialize_tensor(img_low_15)
-    img_high_bytes_15 = tf.io.serialize_tensor(img_high_15)
-    lat = np.array(row["lat"], dtype=np.float32)
-    lng = np.array(row["lng"], dtype=np.float32)
-    urban_share = np.array(label[check_id]['urban'].item(), dtype=np.float32)
-    pop_share = np.array(label[check_id]['popshare_00'].item(), dtype=np.float32)
-    inc0 = np.array(label[check_id]['log_inc_00'].item(), dtype=np.float32)
-    pop0 = np.array(label[check_id]['log_pop_00'].item(), dtype=np.float32)
-    inc10 = np.array(label[check_id]['log_inc_10'].item(), dtype=np.float32)
-    pop10 = np.array(label[check_id]['log_pop_10'].item(), dtype=np.float32)
-    inc15 = np.array(label[check_id]['log_inc_15'].item(), dtype=np.float32)
-    features = scaled_features[check_id.to_numpy()]
-    features = np.concatenate((features.loc[:, ['log_pop_cnty_{}'.format('00'), 'log_inc_cnty_{}'.format('00')]],
-                               features.loc[:, 'white_00':]), axis=-1)
-    features = features.astype(np.float32)
-    features_bytes = tf.io.serialize_tensor(features)
-    return serialize_example_mw_test(img_low_bytes_0,img_low_bytes_10,img_low_bytes_15, img_high_bytes_0, img_high_bytes_10, img_high_bytes_15, img_id, inc0, inc10, inc15, pop0, pop10, lat, lng, urban_share, pop_share, features_bytes)
 
 
 if __name__=="__main__":
