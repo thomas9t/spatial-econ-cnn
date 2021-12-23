@@ -68,6 +68,44 @@ def get_feature_description(feature_type):
         }
         feature_description['img_id'] = tf.io.FixedLenFeature((), tf.int64)
         feature_description['baseline_features'] = tf.io.FixedLenFeature((), tf.string)
+    elif feature_type == 'mw_15':
+        feature_description = {
+            'image_low_0': tf.io.FixedLenFeature((), tf.string),
+            'image_high_0': tf.io.FixedLenFeature((), tf.string),
+            'image_low_10': tf.io.FixedLenFeature((), tf.string),
+            'image_high_10': tf.io.FixedLenFeature((), tf.string),
+            'image_low_15': tf.io.FixedLenFeature((), tf.string),
+            'image_high_15': tf.io.FixedLenFeature((), tf.string),
+            'img_id': tf.io.FixedLenFeature((), tf.int64),
+            'inc0': tf.io.FixedLenFeature((), tf.float32),
+            'inc10': tf.io.FixedLenFeature((), tf.float32),
+            'inc15': tf.io.FixedLenFeature((), tf.float32),
+            'pop0': tf.io.FixedLenFeature((), tf.float32),
+            'pop10': tf.io.FixedLenFeature((), tf.float32),
+            'lat': tf.io.FixedLenFeature((), tf.float32),
+            'lng': tf.io.FixedLenFeature((), tf.float32),
+            'urban_share': tf.io.FixedLenFeature((), tf.float32),
+            'pop_share': tf.io.FixedLenFeature((), tf.float32),
+            'baseline_features': tf.io.FixedLenFeature((), tf.string)
+        }
+    elif feature_type == "test":
+        feature_description = {
+            'image0': tf.io.FixedLenFeature((), tf.string),
+            'image10': tf.io.FixedLenFeature((), tf.string),
+            'image15': tf.io.FixedLenFeature((), tf.string),
+            'img_id': tf.io.FixedLenFeature((), tf.int64),
+            'inc0': tf.io.FixedLenFeature((), tf.float32),
+            'inc10': tf.io.FixedLenFeature((), tf.float32),
+            'inc15': tf.io.FixedLenFeature((), tf.float32),
+            'pop0': tf.io.FixedLenFeature((), tf.float32),
+            'pop10': tf.io.FixedLenFeature((), tf.float32),
+            'lat': tf.io.FixedLenFeature((), tf.float32),
+            'lng': tf.io.FixedLenFeature((), tf.float32),
+            'urban_share': tf.io.FixedLenFeature((), tf.float32),
+            'pop_share': tf.io.FixedLenFeature((), tf.float32),
+            'baseline_features': tf.io.FixedLenFeature((), tf.string),
+            'categorical_values': tf.io.FixedLenFeature((), tf.string)
+        }
     else:
         sys.exit('pls use a correct model_type')
     return feature_description

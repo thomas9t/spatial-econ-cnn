@@ -43,9 +43,10 @@ ds_dir = '{}/{}_{}_{}_{}_sharded/{}_{}_{}_{}_{}_*-of-*.tfrecords'\
 def main():
     df = pd.DataFrame()
     img_size, _, n_origin_bands, n_bands, res = get_img_size(size, model_type, region, resolution)
-    feature_description = get_feature_description(feature_type='test')
     if region == "mw":
         feature_description = get_feature_description(feature_type='mw_15')
+    else:
+        feature_description = get_feature_description(feature_type='test')
     train = read_files(ds_dir.format(15, 'train', 15), lambda x: parse(x, feature_description, img_size, n_origin_bands, n_bands, res))
     valid = read_files(ds_dir.format(15, 'validation', 15), lambda x: parse(x, feature_description, img_size, n_origin_bands, n_bands, res))
     test = read_files(ds_dir.format(15, 'test', 15), lambda x: parse(x, feature_description, img_size, n_origin_bands, n_bands, res))
@@ -75,10 +76,8 @@ def predict(ds, model, df):
     return df
 
 def parse(serialized_example, feature_description, img_size, n_origin_bands, n_bands, res):
-    if (res == '_high') | (res == '_low'):
-        res = res + '_'
     example = tf.io.parse_single_example(serialized_example, feature_description)
-    image = tf.stack([tf.clip_by_value(tf.reshape(tf.io.parse_tensor(example['image'+ res + y], out_type=float),(img_size, img_size, n_origin_bands))[:, :, 0:n_bands], 0, 1) for y in years], 0)
+    image = tf.stack([tf.clip_by_value(tf.reshape(tf.io.parse_tensor(example['image'+y if res == '' else paste_string(['image', res, y])], out_type=float),(img_size, img_size, n_origin_bands))[:, :, 0:n_bands], 0, 1) for y in years], 0)
     features = tf.io.parse_tensor(example['baseline_features'], out_type=float)
     features = tf.reshape(features, (34,))
     features = tf.stack([features for y in years], 0)
