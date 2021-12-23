@@ -17,7 +17,10 @@ size = sys.argv[1] # small or large
 construct = sys.argv[2] # BG or block
 
 def main():
-    TOP_CODES = [2500, 2500, 2500, 10000, 10000, 10000, 10000, 63]
+    if size == "large":
+        TOP_CODES = [2500, 2500, 2500, 10000, 10000, 10000, 10000, 63]
+    elif size == "small":
+        TOP_CODES = [2500, 2500, 2500, 10000, 10000, 10000, 10000]
     scaler = np.array(TOP_CODES).astype(np.float32).reshape(1,-1) 
     dataset = tables.open_file("../temp/{}_images_all_years_raw.h5".format(size))
     label = pd.read_csv('../temp/{}cw_labelled_imgs_national_{}.csv'.format(construct, size))
@@ -99,12 +102,10 @@ def serialize_example(image0, image1, img_id, inc0, inc1, pop0, pop1, lat, lng, 
 def get_serialize(row, label, scaler, scaled_features, check_id, img_id, categorical_values):
     img0 = row['img{}'.format(0)].astype(np.float32)
     img0 = img0 / scaler
-#     img0 = np.concatenate((np.clip(img0[:,:,0:3],0,2500), np.clip(img0[:,:,3:7],0,10000)), axis=-1) / scaler
     img0 = img0[7:-7,7:-7,:]
     img0_bytes = tf.io.serialize_tensor(img0)
     img1 = row['img{}'.format(10)].astype(np.float32)
     img1 = img1 / scaler
-#     img1 = np.concatenate((np.clip(img1[:,:,0:3],0,2500), np.clip(img1[:,:,3:7],0,10000)), axis=-1) / scaler
     img1 = img1[7:-7,7:-7,:]
     img1_bytes = tf.io.serialize_tensor(img1)
     lat = np.array(row["lat"], dtype=np.float32)
