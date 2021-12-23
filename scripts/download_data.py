@@ -22,10 +22,13 @@ ch.setLevel(logging.INFO)
 LOG.addHandler(ch)
 LOG.setLevel(logging.INFO)
 
+ROOT = os.environ.get("CNN_PROJECT_ROOT", "../")
+
+
 mode = sys.argv[1]
 if mode not in ["large", "small", "mw"]:
     raise Exception("Mode must be 'large','small', or 'mw'")
-path = f"../data/{mode}_images_all_years_raw.h5"  # Where should the output HDF5 file be written?
+path = f"{ROOT}/data/{mode}_images_all_years_raw.h5"  # Where should the output HDF5 file be written?
 
 if mode == "small":
     root_dir_id = "1d1Fw4nuM_9a8xAguehLFW7UmsZVk8dt-"  # The folder in Google Drive that contains the raw data (this will need to be changed if you created a new extract)
@@ -33,9 +36,9 @@ if mode == "small":
     IMG_COLS_RAW = 54  # The number of columns in the raw images (54 for small, 94 for large)
     CHANNEL_NAMES = CHANNEL_NAMES_SMALL
 elif mode == "large":
-    root_dir_id = "1TyZ9FEFr0ySaPxXHLyIUet6jEB3NEwbe"  # The folder in Google Drive that contains the raw data (this will need to be changed if you created a new extract)
-    IMG_ROWS_RAW = 94  # The number of rows in the raw images (54 for small, 94 for large)
-    IMG_COLS_RAW = 94  # The number of columns in the raw images (54 for small, 94 for large)
+    root_dir_id = "1TyZ9FEFr0ySaPxXHLyIUet6jEB3NEwbe"
+    IMG_ROWS_RAW = 94
+    IMG_COLS_RAW = 94
     CHANNEL_NAMES = CHANNEL_NAMES_LARGE
 elif mode == "mw":
     root_dir_id = "1qifSHdP_UOQKTvc2vzUgAIy3yq6id_HR"
@@ -85,11 +88,11 @@ elif mode == "mw":
 
 
 def main():
-    tempdir = f"../temp_{mode}"
+    tempdir = f"{ROOT}/temp_{mode}"
     if not os.path.exists(tempdir):
         os.mkdir(tempdir)
-    if not os.path.exists("../outputs"):
-        os.mkdir("../outputs")
+    if not os.path.exists(f"{ROOT}/outputs"):
+        os.mkdir(f"{ROOT}/outputs")
     h5_open_mode = "w" if not os.path.exists(path) else "a"
     h5_file = tables.open_file(path, mode=h5_open_mode)
     if "/data" not in h5_file:
@@ -98,7 +101,7 @@ def main():
     
     # Used to keep track of what data has already been downloaded
     # in case the pod crashes and we need to restart
-    processed_paths_file = f"../outputs/processed_paths_{mode}.txt"
+    processed_paths_file = f"{ROOT}/outputs/processed_paths_{mode}.txt"
     if not os.path.exists(processed_paths_file):
         with open(processed_paths_file, "w") as fh:
             pass
@@ -117,7 +120,7 @@ def main():
     ix = 0
     invalid_data = 0
 
-    outfh_path = f"../outputs/valid_imgs_{mode}.txt"
+    outfh_path = f"{ROOT}/outputs/valid_imgs_{mode}.txt"
     out_fh = open(outfh_path, "w" if not os.path.exists(outfh_path) else "a")
     if mode == "w":
         out_fh.write("filename,img_num_in_file,img_id,lat,lng,urban\n")
