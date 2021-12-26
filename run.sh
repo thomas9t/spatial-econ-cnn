@@ -89,82 +89,103 @@ python scripts/train_diff_model.py block national base large inc low True 100 <d
 # make predictions for levels
 
 # base
-python scripts/make_predictions_level.py block national base large inc low True 200 data outputs weights 1e-4 1e-6 16 50 32 0.5
-python scripts/make_predictions_level.py block national base large inc low False 200 data outputs weights 1e-4 1e-8 16 50 32 0.5
-python scripts/make_predictions_level.py block national base large pop low True 200 data outputs weights 1e-4 1e-7 16 100 32 0.5
-python scripts/make_predictions_level.py block national base large pop low False 200 data outputs weights 1e-4 1e-7 16 50 32 0.5
-python scripts/make_predictions_level.py block national base small inc low True 200 data outputs weights 1e-4 1e-8 16 100 32 0.5
-python scripts/make_predictions_level.py block national base small inc low False 200 data outputs weights 1e-4 1e-8 16 100 32 0.5
-python scripts/make_predictions_level.py block national base small pop low True 200 data outputs weights 1e-4 1e-7 16 50 32 0.5
-python scripts/make_predictions_level.py block national base small pop low False 200 data outputs weights 1e-4 1e-7 16 50 32 0.5
+python scripts/make_predictions_level.py block national base large inc low True 200 data outputs weights 1e-4 1e-6 16 50 32 0.5 False
+python scripts/make_predictions_level.py block national base large inc low False 200 data outputs weights 1e-4 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_level.py block national base large pop low True 200 data outputs weights 1e-4 1e-7 16 100 32 0.5 False
+python scripts/make_predictions_level.py block national base large pop low False 200 data outputs weights 1e-4 1e-7 16 50 32 0.5 False
+python scripts/make_predictions_level.py block national base small inc low True 200 data outputs weights 1e-4 1e-8 16 100 32 0.5 False
+python scripts/make_predictions_level.py block national base small inc low False 200 data outputs weights 1e-4 1e-8 16 100 32 0.5 False
+python scripts/make_predictions_level.py block national base small pop low True 200 data outputs weights 1e-4 1e-7 16 50 32 0.5 False
+python scripts/make_predictions_level.py block national base small pop low False 200 data outputs weights 1e-4 1e-7 16 50 32 0.5 False
  
 # rgb
-python scripts/make_predictions_level.py block national RGB large inc low True 200 data outputs weights 1e-4 1e-6 16 50 32 0.5
-python scripts/make_predictions_level.py block national RGB large inc low False 200 data outputs weights 1e-4 1e-8 16 50 32 0.5
-python scripts/make_predictions_level.py block national RGB large pop low True 200 data outputs weights 1e-4 1e-7 16 100 32 0.5
-python scripts/make_predictions_level.py block national RGB large pop low False 200 data outputs weights 1e-4 1e-7 16 50 32 0.5
+python scripts/make_predictions_level.py block national RGB large inc low True 200 data outputs weights 1e-4 1e-6 16 50 32 0.5 False
+python scripts/make_predictions_level.py block national RGB large inc low False 200 data outputs weights 1e-4 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_level.py block national RGB large pop low True 200 data outputs weights 1e-4 1e-7 16 100 32 0.5 False
+python scripts/make_predictions_level.py block national RGB large pop low False 200 data outputs weights 1e-4 1e-7 16 50 32 0.5 False
 
 # nl
-python scripts/make_predictions_level.py block national nl large inc low True 200 data outputs weights 1e-4 1e-6 16 50 32 0.5
-python scripts/make_predictions_level.py block national nl large inc low False 200 data outputs weights 1e-4 1e-8 16 100 32 0.5
-python scripts/make_predictions_level.py block national nl large pop low True 200 data outputs weights 1e-4 1e-6 16 100 32 0.5
-python scripts/make_predictions_level.py block national nl large pop low False 200 data outputs weights 1e-4 1e-7 16 50 32 0.5
+python scripts/make_predictions_level.py block national nl large inc low True 200 data outputs weights 1e-4 1e-6 16 50 32 0.5 False
+python scripts/make_predictions_level.py block national nl large inc low False 200 data outputs weights 1e-4 1e-8 16 100 32 0.5 False
+python scripts/make_predictions_level.py block national nl large pop low True 200 data outputs weights 1e-4 1e-6 16 100 32 0.5 False
+python scripts/make_predictions_level.py block national nl large pop low False 200 data outputs weights 1e-4 1e-7 16 50 32 0.5 False
 
 # mw
-python scripts/make_predictions_level.py block mw RGB small inc low False 200 data outputs weights 1e-4 1e-7 16 200 32 0.5
-python scripts/make_predictions_level.py block mw RGB small inc high False 200 data outputs weights 1e-4 1e-7 16 200 32 0.5
-python scripts/make_predictions_level.py block mw RGB small pop low False 200 data outputs weights 1e-4 1e-7 16 200 32 0.5
-python scripts/make_predictions_level.py block mw RGB small pop high False 200 data outputs weights 1e-4 1e-7 16 200 32 0.5
+python scripts/make_predictions_level.py block mw RGB small inc low False 200 data outputs weights 1e-4 1e-7 16 200 32 0.5 False
+python scripts/make_predictions_level.py block mw RGB small inc high False 200 data outputs weights 1e-4 1e-7 16 200 32 0.5 False
+python scripts/make_predictions_level.py block mw RGB small pop low False 200 data outputs weights 1e-4 1e-7 16 200 32 0.5 False
+python scripts/make_predictions_level.py block mw RGB small pop high False 200 data outputs weights 1e-4 1e-7 16 200 32 0.5 False
 
-python scripts/make_predictions_level.py block mw RGB small inc low True 200 data outputs weights 1e-4 1e-7 16 200 32 0.5
-python scripts/make_predictions_level.py block mw RGB small inc high True 200 data outputs weights 1e-4 1e-7 16 200 32 0.5
-python scripts/make_predictions_level.py block mw RGB small pop low True 200 data outputs weights 1e-4 1e-7 16 200 32 0.5
-python scripts/make_predictions_level.py block mw RGB small pop high True 200 data outputs weights 1e-4 1e-7 16 200 32 0.5
+python scripts/make_predictions_level.py block mw RGB small inc low True 200 data outputs weights 1e-4 1e-7 16 200 32 0.5 False
+python scripts/make_predictions_level.py block mw RGB small inc high True 200 data outputs weights 1e-4 1e-7 16 200 32 0.5 False
+python scripts/make_predictions_level.py block mw RGB small pop low True 200 data outputs weights 1e-4 1e-7 16 200 32 0.5 False
+python scripts/make_predictions_level.py block mw RGB small pop high True 200 data outputs weights 1e-4 1e-7 16 200 32 0.5 False
 
 # inc/pop model
-python scripts/make_predictions_level.py block national base large inc_pop low True 200 data outputs weights 1e-5 1e-7 16 200 32 0.5
-python scripts/make_predictions_level.py block national base large inc_pop low False 200 data outputs weights 1e-4 1e-8 16 200 32 0.5
-python scripts/make_predictions_level.py block national base small inc_pop low True 200 data outputs weights 1e-5 1e-6 16 200 32 0.5
-python scripts/make_predictions_level.py block national base small inc_pop low False 200 data outputs weights 1e-4 1e-8 16 200 32 0.5
+python scripts/make_predictions_level.py block national base large inc_pop low True 200 data outputs weights 1e-5 1e-7 16 200 32 0.5 False
+python scripts/make_predictions_level.py block national base large inc_pop low False 200 data outputs weights 1e-4 1e-8 16 200 32 0.5 False
+python scripts/make_predictions_level.py block national base small inc_pop low True 200 data outputs weights 1e-5 1e-6 16 200 32 0.5 False
+python scripts/make_predictions_level.py block national base small inc_pop low False 200 data outputs weights 1e-4 1e-8 16 200 32 0.5 False
+
+# all samples
+python scripts/make_predictions_level.py block national base large inc low True 200 data outputs weights 1e-4 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_level.py block national base large inc low False 200 data outputs weights 1e-5 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_level.py block national base large pop low True 200 data outputs weights 1e-4 1e-6 16 200 32 0.5 True
+python scripts/make_predictions_level.py block national base large pop low False 200 data outputs weights 1e-4 1e-7 16 200 32 0.5 True
+python scripts/make_predictions_level.py block national base small inc low True 200 data outputs weights 1e-4 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_level.py block national base small inc low False 200 data outputs weights 1e-5 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_level.py block national base small pop low True 200 data outputs weights 1e-4 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_level.py block national base small pop low False 200 data outputs weights 1e-4 1e-6 16 200 32 0.5 True
 
 # make predictions for diffs
 
 # base
-python scripts/make_predictions_diff.py block national base large inc low True 100 data outputs weights 1e-5 1e-8 16 50 32 0.5
-python scripts/make_predictions_diff.py block national base large inc low False 100 data outputs weights 1e-5 1e-7 16 200 32 0.5
-python scripts/make_predictions_diff.py block national base large pop low True 100 data outputs weights 1e-5 1e-8 16 50 32 0.5
-python scripts/make_predictions_diff.py block national base large pop low False 100 data outputs weights 1e-4 1e-6 16 50 32 0.5
-python scripts/make_predictions_diff.py block national base small inc low True 100 data outputs weights 1e-5 1e-8 16 50 32 0.5
-python scripts/make_predictions_diff.py block national base small inc low False 100 data outputs weights 1e-5 1e-8 16 50 32 0.5
-python scripts/make_predictions_diff.py block national base small pop low True 100 data outputs weights 1e-5 1e-8 16 50 32 0.5
-python scripts/make_predictions_diff.py block national base small pop low False 100 data outputs weights 1e-4 1e-7 16 50 32 0.5
+python scripts/make_predictions_diff.py block national base large inc low True 100 data outputs weights 1e-5 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national base large inc low False 100 data outputs weights 1e-5 1e-7 16 200 32 0.5 False
+python scripts/make_predictions_diff.py block national base large pop low True 100 data outputs weights 1e-5 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national base large pop low False 100 data outputs weights 1e-4 1e-6 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national base small inc low True 100 data outputs weights 1e-5 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national base small inc low False 100 data outputs weights 1e-5 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national base small pop low True 100 data outputs weights 1e-5 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national base small pop low False 100 data outputs weights 1e-4 1e-7 16 50 32 0.5 False
  
 # rgb
-python scripts/make_predictions_diff.py block national RGB large inc low True 100 data outputs weights 1e-4 1e-8 16 50 32 0.5
-python scripts/make_predictions_diff.py block national RGB large inc low False 100 data outputs weights 1e-5 1e-8 16 50 32 0.5
-python scripts/make_predictions_diff.py block national RGB large pop low True 100 data outputs weights 1e-4 1e-8 16 100 32 0.5
-python scripts/make_predictions_diff.py block national RGB large pop low False 100 data outputs weights 1e-5 1e-8 16 50 32 0.5
+python scripts/make_predictions_diff.py block national RGB large inc low True 100 data outputs weights 1e-4 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national RGB large inc low False 100 data outputs weights 1e-5 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national RGB large pop low True 100 data outputs weights 1e-4 1e-8 16 100 32 0.5 False
+python scripts/make_predictions_diff.py block national RGB large pop low False 100 data outputs weights 1e-5 1e-8 16 50 32 0.5 False
 
 # mw
-python scripts/make_predictions_diff.py block mw RGB small inc low False 100 data outputs weights 1e-5 1e-8 16 200 32 0.5
-python scripts/make_predictions_diff.py block mw RGB small inc high False 100 data outputs weights 1e-5 1e-8 16 200 32 0.5
-python scripts/make_predictions_diff.py block mw RGB small pop low False 100 data outputs weights 1e-5 1e-6 16 200 32 0.5
-python scripts/make_predictions_diff.py block mw RGB small pop high False 100 data outputs weights 1e-5 1e-8 16 200 32 0.5
+python scripts/make_predictions_diff.py block mw RGB small inc low False 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 False
+python scripts/make_predictions_diff.py block mw RGB small inc high False 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 False
+python scripts/make_predictions_diff.py block mw RGB small pop low False 100 data outputs weights 1e-5 1e-6 16 200 32 0.5 False
+python scripts/make_predictions_diff.py block mw RGB small pop high False 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 False
 
-python scripts/make_predictions_diff.py block mw RGB small inc low True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5
-python scripts/make_predictions_diff.py block mw RGB small inc high True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5
-python scripts/make_predictions_diff.py block mw RGB small pop low True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5
-python scripts/make_predictions_diff.py block mw RGB small pop high True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5
+python scripts/make_predictions_diff.py block mw RGB small inc low True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 False
+python scripts/make_predictions_diff.py block mw RGB small inc high True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 False
+python scripts/make_predictions_diff.py block mw RGB small pop low True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 False
+python scripts/make_predictions_diff.py block mw RGB small pop high True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 False
 
 # nl
-python scripts/make_predictions_diff.py block national nl large inc low True 100 data outputs weights 1e-4 1e-8 16 50 32 0.5
-python scripts/make_predictions_diff.py block national nl large inc low False 100 data outputs weights 1e-5 1e-8 16 50 32 0.5
-python scripts/make_predictions_diff.py block national nl large pop low True 100 data outputs weights 1e-4 1e-8 16 50 32 0.5
-python scripts/make_predictions_diff.py block national nl large pop low False 100 data outputs weights 1e-5 1e-7 16 100 32 0.5
+python scripts/make_predictions_diff.py block national nl large inc low True 100 data outputs weights 1e-4 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national nl large inc low False 100 data outputs weights 1e-5 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national nl large pop low True 100 data outputs weights 1e-4 1e-8 16 50 32 0.5 False
+python scripts/make_predictions_diff.py block national nl large pop low False 100 data outputs weights 1e-5 1e-7 16 100 32 0.5 False
 
 # inc/pop
 
-python scripts/make_predictions_diff.py block national base large inc_pop low True 100 data outputs weights 1e-4 1e-8 16 200 32 0.5
-python scripts/make_predictions_diff.py block national base large inc_pop low False 100 data outputs weights 1e-4 1e-7 16 200 32 0.5
-python scripts/make_predictions_diff.py block national base small inc_pop low True 100 data outputs weights 1e-4 1e-8 16 200 32 0.5
-python scripts/make_predictions_diff.py block national base small inc_pop low False 100 data outputs weights 1e-4 1e-6 16 200 32 0.5
+python scripts/make_predictions_diff.py block national base large inc_pop low True 100 data outputs weights 1e-4 1e-8 16 200 32 0.5 False
+python scripts/make_predictions_diff.py block national base large inc_pop low False 100 data outputs weights 1e-4 1e-7 16 200 32 0.5 False
+python scripts/make_predictions_diff.py block national base small inc_pop low True 100 data outputs weights 1e-4 1e-8 16 200 32 0.5 False
+python scripts/make_predictions_diff.py block national base small inc_pop low False 100 data outputs weights 1e-4 1e-6 16 200 32 0.5 False
+
+# all samples
+python scripts/make_predictions_diff.py block national base large inc low True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_diff.py block national base large inc low False 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_diff.py block national base large pop low True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_diff.py block national base large pop low False 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_diff.py block national base small inc low True 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_diff.py block national base small inc low False 100 data outputs weights 1e-5 1e-8 16 200 32 0.5 True
+python scripts/make_predictions_diff.py block national base small pop low True 100 data outputs weights 1e-5 1e-6 16 200 32 0.5 True
+python scripts/make_predictions_diff.py block national base small pop low False 100 data outputs weights 1e-4 1e-8 16 200 32 0.5 True
+ 
