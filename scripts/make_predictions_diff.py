@@ -59,10 +59,10 @@ def main():
     df = predict(train, diff_model, df)
     df = predict(valid, diff_model, df)
     df = predict(test, diff_model, df)
-    df.to_csv('{}/{}_{}_{}_diff_{}{}{}_{}_predictions.csv'.format(out_dir, construct, size, region, model_type,
+    df.to_csv('{}/{}_{}_{}_diff_{}{}{}_{}_predictions{}.csv'.format(out_dir, construct, size, region, model_type,
                                                                      '_feature' if with_feature else '',
                                                                      '_high' if resolution == 'high' else '',
-                                                                     datatype),
+                                                                     datatype, '_all' if all_sample else ''),
               index=False)
     print('complete!')
 
