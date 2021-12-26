@@ -27,6 +27,7 @@ bs = int(sys.argv[14])
 ds = int(sys.argv[15])
 nf = int(sys.argv[16])
 dr = float(sys.argv[17])
+all_sample = get_bool(sys.argv[18]) # [True, False]
 
 if datatype == "inc":
     years = [[0,10], [0,15], [10,15]]
@@ -34,9 +35,9 @@ else:
     years = [[0,10]]
 
 
-weight_dir = '{}/{}_{}_{}_diff_{}{}{}_{}_{}/checkpoints/{}_{}_{}_{}_{}_{}'\
+weight_dir = '{}/{}_{}_{}_diff_{}{}{}_{}_{}{}/checkpoints/{}_{}_{}_{}_{}_{}'\
     .format(weight_dir, construct, size, region, model_type, '_feature' if with_feature else '',
-            '_high' if resolution == 'high' else '', datatype, epochs, lr, l2,
+            '_high' if resolution == 'high' else '', datatype, epochs, '_all' if all_sample else '', lr, l2,
             bs, ds, nf, dr)
 ds_dir = '{}/{}_{}_{}_{}/{}_{}_{}_{}_{}_*-of-*.tfrecords'\
     .format(data_dir, size, construct, '{}', region, '{}', construct, size, '{}', region)
