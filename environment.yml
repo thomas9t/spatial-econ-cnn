@@ -1,0 +1,9 @@
+name: spatial-econ-cnn
+dependencies:
+  - python=3.8
+  - tensorflow
+  - numpy
+  - tables
+  - pydrive
+  - pandas
+  - tqdm
