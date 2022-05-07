@@ -1,8 +1,7 @@
 
 # Using Neural Networks to Predict Micro-Spatial Economic Growth
 
-Version 1.0
-https://doi.org/10.3886/E158002V1
+This github repo replicates the materials in openICPSR repo Version 1.0, accessible [here](https://doi.org/10.3886/E158002V1).
 
 Repository of code associated with the paper "Using Neural Networks to Predict Micro-Spatial Economic Growth", which is conditionally accepted at the journal American Economic Review: Insights.
 
@@ -51,7 +50,7 @@ To the extent possible, we have included intermediate datasets ("generated_files
 
 ## Phase (1) - Data Extraction and Processing
 
-In this phase, we extract the raw imagery and census data used to train our models. Cleaned and processed data ready for training (e.g. the output of this phase) is avilable on [GoogleDrive](https://drive.google.com/drive/folders/1UoI9ssWVz9pGJY9wXEYQrGjzuwEdnlYY?usp=sharing). This phase is divided into the following steps:
+In this phase, we extract the raw imagery and census data used to train our models. Cleaned and processed data ready for training (e.g. the output of this phase) is avilable in the `data` folder of this [GoogleDrive](https://drive.google.com/drive/folders/1UgE9rTIyKP_q8Ujfad3bPLdQvz2Z3Xx0?usp=sharing). This phase is divided into the following steps:
 
 ### Phase (1a): `code/extract_imagery`
 
@@ -76,7 +75,7 @@ This sub-phase creates labels and baseline features for the raw data, merges the
 
 5. **Prepare Training Data**: Next, we process the HDF5 file produced in step 3 into a form suitable for use in tensorflow. In this phase, we also match each image with its ground truth label (e.g. the outcome to be predicted), partition the data into train, validation, and test sets, and strip off the overlap that GoogleEarth engine adds (e.g. the KernelSize parameter in GEE). This is performed in `prep_data_levels.py` and `prep_data_diffs.py` for levels and diffs models repsectively. The script `prep_data_testing.py` prepares data for final prediction. This is done separately, because we use a slightly different format for prediction data than for training models. Finally, to improve processing speed by TensorFlow, we split the large TFrecord files producted by these scripts into small shards that can be loaded more efficiently. This is performed in `shard_data.py`.
 
-The output of this phase is made available here [GoogleDrive](https://drive.google.com/drive/folders/1UoI9ssWVz9pGJY9wXEYQrGjzuwEdnlYY?usp=sharing). Users who wish to use our existing data, but experiment with new model architectures may download this data, and uncompress (`tar -xvf ...`) it to the `data` sub-folder of this repository.
+The output of this phase is made available in the data folder here [GoogleDrive](https://drive.google.com/drive/folders/1UgE9rTIyKP_q8Ujfad3bPLdQvz2Z3Xx0?usp=sharing). Users who wish to use our existing data, but experiment with new model architectures may download this data, and uncompress (`tar -xvf ...`) it to the `data` sub-folder of this repository.
 
 ## Phase (2) - Model Training and Validation: `code/train_test_models`
 
@@ -84,12 +83,12 @@ This phase defines model architectures, trains models, and performs hyperparamet
 
 **General order of operations**: `train_level_model.py -> train_diff_model.py`
 
-Trained models are available here: [GoogleDrive](https://drive.google.com/drive/folders/1-tBN5XbsCJ3wysHZhZJUYIIzT0VQx_er?usp=sharing). These trained weights may be used for transfer learning (e.g. using our weights to generate features from different imagery). Models are named according to the following conventions:
+Trained models are available in the weights folder here: [GoogleDrive](https://drive.google.com/drive/folders/1UgE9rTIyKP_q8Ujfad3bPLdQvz2Z3Xx0?usp=sharing). These trained weights may be used for transfer learning (e.g. using our weights to generate features from different imagery). Models are named according to the following conventions:
 
 `block_[small,large]_national_[level,diff]_base[_feature]_[inc,pop,inc_pop][_all]`, where `small/large` indicates the imagery size (e.g. the `40x40` vs `80x80` imagery), `level/diff` indicates models for levels vs. diffs, the presence `_feature` indicates models trained with initial conditions (e.g. auxiliary features), `inc/pop/inc_pop` indicates the outcome variable, where using `inc_pop` will train a model for income per capita, and the presence of `_all` indicates models trained on the entire set of images in 2000/2010 (e.g. used to produce the out-of-period results in Table 2).
 
 ### Instructions
-1. Download data [GoogleDrive](https://drive.google.com/drive/folders/1UoI9ssWVz9pGJY9wXEYQrGjzuwEdnlYY?usp=sharing) 
+1. Download data in data folder here [GoogleDrive](https://drive.google.com/drive/folders/1UgE9rTIyKP_q8Ujfad3bPLdQvz2Z3Xx0?usp=sharing) 
 2. Move into the `data/` directory of this repository and un-compress `tar -xvf ...`
 4. Run the script `run_training.sh`. There are several different run configurations listed in `run_training.sh` which can reproduce the various aspects of the paper (e.g. `RGB only` models or models with nighlights). Inspect `run_training.sh` for more detail.
 5. Run tensorboard by running `tensorboard --logdir='out_dir/logs'` in terminal to monitor the training process and validation results.
@@ -101,8 +100,8 @@ Trained models are available here: [GoogleDrive](https://drive.google.com/drive/
 This phase uses trained models to generate predictions for each image in our data set and finally produces the results in our draft based on these predictions.
 
 ### Instructions for generating predictions
-1. Download trained models [GoogleDrive](https://drive.google.com/drive/folders/1-tBN5XbsCJ3wysHZhZJUYIIzT0VQx_er?usp=sharing), or run the training scripts as described in the previous phase. Each model is represented by a directory in the folder linked here. Copy the models to the `/weights` folder of this repository.
-2. Download the prediction data (if you haven't already) [GoogleDrive](https://drive.google.com/file/d/1NK3TCo6-XbS_I0dHf8eEdDuf22mYXSNn/view?usp=sharing) and unzip it to the `/data` folder of this repository.
+1. Download trained models in weights folder here [GoogleDrive](https://drive.google.com/drive/folders/1UgE9rTIyKP_q8Ujfad3bPLdQvz2Z3Xx0?usp=sharing), or run the training scripts as described in the previous phase. Each model is represented by a directory in the folder linked here. Copy the models to the `/weights` folder of this repository.
+2. Download the prediction data (if you haven't already) which is the `testing_dataset` in the data folder here [GoogleDrive](https://drive.google.com/file/d/1NK3TCo6-XbS_I0dHf8eEdDuf22mYXSNn/view?usp=sharing) and unzip it to the `/data` folder of this repository.
 3. Run the script `run_predictions.sh`. There are several different run configurations listed in `run_training.sh` which can reproduce the various aspects of the paper. Inspect `run_predictions.sh` for more detail. The final hyperparameters we selected (via grid search as described in the paper) are hard coded in the calls here. Predictions are written as CSV files keyed by `img_id` to the `/data/predictions` folder of this repository (although this can be configured to write somewhere else as needed). If you encounter errors complaining that a model could not be found, please ensure the environment variable `CNN_PROJECT_ROOT` is set correctly (e.g. to the root directory of this repository).
 
 Predictions and geographic shapefiles at the level of our large images can be accessed in this repository under data>applications. Also shared is a version which has been geographically crosswalked to 2010 Census Blocks. The unique identifier for images is img_id, and for Census Blocks is gisjoin (as defined by NHGIS [here](https://www.nhgis.org/geographic-crosswalks)). Within each file are predictions of income and population which are generated in our out of sample model (as described in section 3.4). The variable inc_0_feature for example refers to the predicted log income in 2000, using the model including initial conditions. The variable dpop_9_19, conversely is our prediction of the log change in population from 2009 to 2019, in the model excluding initial conditions. Note that difference predictions are not crosswalked to the Block version of these data.
@@ -129,7 +128,7 @@ Note: Census and LODES data are processed together to create the joint file data
 
 # Listing of Folders on Google Drive and Approximate Storage Sizes
 
-**Folder `data` [link](https://drive.google.com/drive/folders/1UoI9ssWVz9pGJY9wXEYQrGjzuwEdnlYY?usp=sharing); (368gb; 9 files)**:
+**Folder `data` [link](https://drive.google.com/file/d/1NK3TCo6-XbS_I0dHf8eEdDuf22mYXSNn/view?usp=sharing); (368gb; 9 files)**:
 
 Contains processed satellite imagery in TFRecord format used directly as input to model training. Folder contents are as follows:
 
@@ -144,7 +143,7 @@ Contains processed satellite imagery in TFRecord format used directly as input t
 Note: we will not be storing raw google earth export files long-term, as these files occupy over 8TB in total and can be reproduced using the code in Phase 1 and an academic Google Earth Engine account. Anyone interested in these TFRecord files may reach out and we will happily share the files we still have.
 
 
-**Folder `weights` [link]("https://drive.google.com/drive/folders/1-tBN5XbsCJ3wysHZhZJUYIIzT0VQx_er?usp=sharing") ; (141gb; 18,511 files)**:
+**Folder `weights` [link]("https://drive.google.com/file/d/1NK3TCo6-XbS_I0dHf8eEdDuf22mYXSNn/view?usp=sharing") ; (141gb; 18,511 files)**:
 
 Contains trained model weights stored in TensorFlow format. Each model is represented as a directory and named according to the following convention:
 
