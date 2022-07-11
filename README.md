@@ -1,7 +1,7 @@
 
 # Using Neural Networks to Predict Micro-Spatial Economic Growth
 
-This github repo replicates the materials in openICPSR repo Version 1.0, which will soon be accessible [here](https://doi.org/10.3886/E158002V1).
+This github repo replicates the materials in openICPSR repo Version 1.0, accessible [here](https://drive.google.com/file/d/1-NMXMy0R9eSwtBwo6rEkEL_BZG4LPN41/view?usp=sharing).
 
 Repository of code associated with the paper "Using Neural Networks to Predict Micro-Spatial Economic Growth", which is accepted at the journal American Economic Review: Insights.
 
